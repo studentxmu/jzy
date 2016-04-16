@@ -62,7 +62,7 @@ class Employee extends Model {
                 $begindate1 = "$thisyear-01-01";
                 $enddate1 = $value['begin'];
                 $lastworkdays = Workday::whereRaw('employee_id = ? and begintime between ? and ?', array($this->id, $begindate1, $enddate1))->orderBy('begintime', 'desc')->take(1)->get();
-                if (!empty($lastworkdays[0]) && $lastworkdays[0]->type == 1) {
+                if (!empty($lastworkdays[0]) && $lastworkdays[0]->type == 1 && count($workdays) != 1) {
                     $kaoqin[$key] = $this->getDay($value['begin'], $value['end']);
                 }
             }
