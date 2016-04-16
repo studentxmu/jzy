@@ -1,0 +1,233 @@
+.tableBox{
+	padding: 10px;
+}
+.tableBox>.tips{
+    position:relative;
+    float:left;
+    width:33.33%;
+    height:44px;
+    line-height:44px;
+    text-align:center;
+    font-size:20px;
+}
+.tableBox>.tips:after{
+    content:"";
+    position:absolute;
+    top:10px;
+    right:0px;
+    width:1px;
+    height:24px;
+    background-color:#2fa4e7;
+}
+.tableBox>.tips:nth-of-type(3n):after{
+    width:0px;
+}
+.tab{
+	border-color: #dddddd;
+	display: block;
+	border-collapse: collapse;
+    clear:both;
+    margin-bottom:10px;;
+}
+th,td{
+	border: 1px solid #dddddd;
+	padding: 8px;
+	text-align: center;
+}
+thead th{
+    border-bottom:2px solid #ccc;
+}
+.tab a{
+    color:#2fa4e7;
+}
+.tab>tbody tr:nth-of-type(odd){
+    background-color:#f9f9f9;
+}
+.tab>thead tr th.check-wrap{
+    padding:0px;
+}
+.tab>tbody tr.active{
+     background-color:#f9d0d7;
+}
+.tableCreat,.tableEdit,.tableDel{
+	height: 36px;
+	line-height: 36px;
+	color: #ffffff;
+	padding: 0 12px;
+	margin: 0 5px;
+	display: inline-block;
+	-moz-border-radius: 4px;
+	-webkit-border-radius: 4px;
+	border-radius: 4px;
+}
+.tableCreat,
+.btn-del{
+	/*background: #59822c;*/
+    font-size:14px;
+	background: #73a839;
+	border: 1px solid #59822c;
+}
+.tab .btn-view{
+    color:#fff;
+    background-color:#73a839;
+    background-image:linear-gradient(#88c149,#73a839 60%,#699934);
+    border:1px solid #73a839;
+    border-bottom:1px solid #59822c;
+    border-radius:4px;
+    float:none;
+    margin:0;
+}
+.tab .btn-edit{
+    color:#fff;
+    background-color:#033c73;
+    background-image:linear-gradient(#04519b,#033c73 60%,#02325f);
+    border:1px solid #033c73;
+    border-bottom:1px solid #022241;
+    border-radius:4px;
+    float:none;
+}
+.tab .btn-view:hover,.tab .btn-edit:hover{
+    -webkit-box-shadow: 0 1px 6px 0 rgba(0,0,0,.12),0 1px 6px 0 rgba(0,0,0,.12);
+       -moz-box-shadow: 0 1px 6px 0 rgba(0,0,0,.12),0 1px 6px 0 rgba(0,0,0,.12);
+            box-shadow: 0 1px 6px 0 rgba(0,0,0,.12),0 1px 6px 0 rgba(0,0,0,.12);
+}
+.tableEdit{
+	
+	background: #04519b;
+	border: 1px solid #011d37;
+}
+.tableDel{
+	background: #c71c22;
+	border: 1px solid #911419;
+}
+.tableCreat img,.tableEdit img,.tableDel img{
+	width: 14px;
+	height: 14px;
+}
+.btn-del-wrap{
+    position:relative;
+    display:inline-block!important;
+    width:74px;
+    height:36px;
+    line-height:36px;
+    background-color:#c71c22;
+    background-image:linear-gradient(#e12b31,#c71c22 60%,#b5191f);
+    border:1px solid #c71c22;
+    border-bottom:1px solid #9a161a;
+    border-radius:4px;
+}
+.btn-del-wrap:hover{
+    -webkit-box-shadow: 0 1px 6px 0 rgba(0,0,0,.12),0 1px 6px 0 rgba(0,0,0,.12);
+       -moz-box-shadow: 0 1px 6px 0 rgba(0,0,0,.12),0 1px 6px 0 rgba(0,0,0,.12);
+            box-shadow: 0 1px 6px 0 rgba(0,0,0,.12),0 1px 6px 0 rgba(0,0,0,.12);
+}
+.tab .btn-del-bg{
+    color:#fff;
+    font-size:14px;
+}
+.btn-del,.btn-audit{
+    position:absolute;
+    left:0;
+    top:0;
+    width:100%;
+    height:100%;
+    opacity:0;
+    filter:alpha(opacity=0);
+    cursor:pointer;
+
+}
+
+.table-top{
+    line-height:26px;
+   margin-bottom:10px;
+}
+.search-wrap{
+    position:relative;
+/*
+    width:172px;
+    height:24px;
+    padding-left: 10px;
+    border:1px solid #ccc;
+    -webkit-border-radius:6px;
+       -moz-border-radius:6px;
+            border-radius:6px;
+*/
+}
+.search-txt{
+    height:24px;
+    border:none;
+    outline:none;
+
+}
+.search-btn{
+    position:absolute;
+    top:0px;
+    right:0px;
+    width:14px;
+    height:14px;
+    padding:7px;
+}
+.search-btn-bg{
+    width:14px;
+    height:14px;
+}
+
+#check-wrap{
+    position:fixed;
+    left:0px;
+    top:0px;
+    width:100%;
+    height:100%;
+    background-color:rgba(0,0,0,0.6);
+    display:none;
+}
+#check-wrap .check-con{
+    position:absolute;
+    top:50%;
+    left:50%;
+    width:600px;
+    height:400px;
+    margin-top:-200px;
+    margin-left:-300px;
+    background-color:#fff;
+}
+#check-wrap .close{
+    position:absolute;
+    top:20px;
+    right:20px;
+    font-size:30px;
+}
+#check-wrap textarea{
+    display:block;
+    width:450px;
+    height:250px;
+    margin:10px auto;
+    margin-top:60px;
+    resize:none;
+    padding:10px;
+    font-size:14px;
+} 
+#check-wrap input[type="button"]{
+    display:block;
+    width:450px;
+    height:32px;
+    margin:10px auto;
+    border:none;
+    font-size:18px; 
+    background-color:#2fa4e7;
+    color:#fff;
+    cursor:pointer;
+
+}
+
+
+.fin-search{
+    height:32px;
+    padding:0px 15px;
+    color:#fff;
+    background-color:#2fa4e7;
+    border:none;
+    cursor:pointer;
+    margin-left:10px;
+
+}

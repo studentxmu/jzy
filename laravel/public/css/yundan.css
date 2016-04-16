@@ -1,0 +1,116 @@
+.content .totalBox{
+    position:relative;
+    padding-right:16px;
+}
+#oilBtn, #tollBtn, #repairBtn, #fineBtn, #eatBtn, #otherBtn, #companyBtn{
+    top:11px;
+}
+.content .total input{
+    width:100px;
+    border:none;
+    border-bottom:1px solid #ccc;
+    border-radius:0px;
+    text-align:center;
+}
+.totalList .totalNav{
+    height:42px;
+    border-bottom:1px solid #ccc;
+}
+.totalList .totalNav p{
+    box-sizing:border-box;
+    float:left;
+    height:42px;
+    line-height:30px;
+    text-align:center;
+    padding:6px;
+    border-left:1px solid #ccc;
+}
+.totalList .totalNav p.jiayou{
+    width:100px;
+}
+.totalList .totalNav p.chedui{
+    width:208px;
+}
+.totalList .totalNav p.chaiyou{
+    width:416px;
+}
+.totalList .totalNav p.xianjin{
+        width:312px;
+}
+.totalList .totalNav p:first-child{
+    border-left:0;
+}
+.totalList ul{
+
+}
+.totalList ul li{
+    height:42px;
+    text-align:center;
+    padding:0px;
+    border:none;
+    border-top:1px solid #ccc;
+}
+.totalList ul li:first-child{
+    border-top:0;
+}
+.totalList ul li p{
+    float:left;
+    width:88px;
+    height:30px;
+    line-height:30px;
+    padding:6px;
+}
+.totalList ul li .t-wrap{
+    box-sizing:border-box;
+    float:left;
+    width:104px;
+    height:42px;
+    line-height:30px;
+    padding:6px;
+    border-left:1px solid #ccc;
+}
+.totalList ul li .t-wrap input{
+    float:left;
+    width:60px;
+    text-align:center;
+
+}
+.totalList ul li .t-wrap input.active{
+    border-color:red;
+}
+.totalList ul li.on .t-wrap input{
+    width:77px;
+}
+.totalList ul li .t-wrap span{
+    float:left;
+}
+#chaiyouTotal{
+    width: 80px;
+    text-align: center;
+    border:none;
+    border-bottom: 1px solid #cccccc;
+}
+.tollLeft{
+    float:left;
+    width:39px;
+    height:85px;
+    line-height:85px;
+    text-align:center;
+    border-right: 1px solid #cccccc;
+    border-bottom: 1px solid #cccccc;
+}
+
+.totalList .tollRight{
+    float:left;
+    width:996px;
+}
+.totalList .tollRight li{
+
+}
+.totalList .tollRight li p{
+    float:left;
+    width:60px;
+    height:42px;
+    line-height:42px;
+    padding:0px;
+}

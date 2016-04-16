@@ -1,0 +1,84 @@
+.user-info-wrap{
+    padding:0px 40px;
+}
+.user-info-tit{
+    height:60px;
+    line-height:60px;
+    font-size:18px;
+    font-weight:normal;
+    border-bottom:1px solid #ccc;
+}
+.user-name{
+    margin-left:30px;
+}
+.user-id{
+    margin-right:30px;
+}
+.user-info{
+    position:relative;
+}
+.user-info-pic{
+    position:absolute;
+    top:48px;
+    right:100px;
+    width:108px;
+    height:140px;
+}
+.user-info-list{
+    padding-top:20px;    
+}
+.user-info-list li{
+    overflow:hidden;
+    min-height: 32px;
+    padding-top: 8px;
+    margin-bottom: 10px;
+}
+.user-info-list li.info-list-tit{
+    font-size:18px;
+    line-height:32px;
+}
+.user-info-list li span{
+    float:left;
+    width:230px;
+    margin-right:20px;
+    text-align:right;
+    line-height:32px;
+}
+.user-info-list li p{
+    float:left;
+    width:280px;
+    line-height:32px;
+}
+.user-info-list li input.copy-btn{
+    float:left;
+    width:80px;
+    height:32px;
+    color:#fff;
+    border:none;
+    margin-left:40px;
+    outline:none;
+    background-color:#2fa4e7;
+    cursor:pointer;
+    -webkit-border-radius: 3px;
+       -moz-border-radius: 3px;
+            border-radius: 3px;
+}
+.user-info-list li input.copy-btn:hover{
+    -webkit-box-shadow: 0 1px 6px 0 rgba(0,0,0,.12),0 1px 6px 0 rgba(0,0,0,.12);
+       -moz-box-shadow: 0 1px 6px 0 rgba(0,0,0,.12),0 1px 6px 0 rgba(0,0,0,.12);
+            box-shadow: 0 1px 6px 0 rgba(0,0,0,.12),0 1px 6px 0 rgba(0,0,0,.12);
+}
+.user-info-list li .down-id{
+    float:left;
+    height:32px;
+}
+.user-info-list li .down-id a{
+    display:inline-block;
+    line-height:30px;
+    text-decoration:underline;
+    color:#2fa4e7;
+    margin-right:16px;
+}
+.user-info-list li{
+
+}

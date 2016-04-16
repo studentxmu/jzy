@@ -1,0 +1,138 @@
+.truckList{
+	padding: 30px 0 40px 40px;
+}
+
+.truckList li{
+	min-height: 32px;
+	padding-top: 8px;
+	margin-bottom: 10px;
+}
+.truckList li.text{
+    height:166px;
+}
+.truckList li.button{
+    height:40px;
+}
+/*
+.truckList li div{
+	width: 400px;
+	padding-left: 100px;
+	float: left;
+}*/
+.truckList li span{
+	width: 130px;
+	text-align: right;
+	float:left;
+	margin-right: 20px;
+    line-height:28px;
+}
+.truckList li em.star{
+	color: red;
+	padding: 0 5px;
+	vertical-align: middle;
+}
+.truckList li input,.truckList li select,.truckList li textarea,.truckList button{
+	border: 1px solid #aaa;
+    float:left;
+}
+.truckList li input{
+	width: 160px;
+	height: 28px;
+	line-height: normal;
+	padding-left: 5px;
+}
+.truckList li input[name='sex']{
+	float:left;
+    width: auto;
+	vertical-align: middle;
+    margin-right:5px;
+}
+.truckList li input[type="file"]{
+    border:none;
+}
+.truckList li textarea{
+   width:360px;
+   height:160px;
+   resize:none;
+}
+.truckList li button{
+    width:180px;
+    height:40px;
+    border:none;
+    color:#fff;
+    padding:0;
+    -webkit-border-radius:3px;
+       -moz-border-radius:3px;
+            border-radius:3px;
+    background-color:#54b4eb;
+    font-size:16px;
+}
+.truckList li button:hover{
+    background-color:#2fa4e7;
+}
+.truckList li label{
+    float:left;
+    line-height:28px;
+	vertical-align: middle;
+}
+#female{
+	margin-left: 15px;
+}
+.truckList li select{
+	width: 165px;
+	height: 30px;
+	padding-left: 24px;
+}
+.truckList li span.dateImg{
+	width: 20px;
+	height: 22px;
+	background: url(../images/datePicker.png) 4px 5px no-repeat;
+	border: none;
+	display: inline-block;
+    margin-left:-23px;
+}
+#buyTime,#precCheck{
+	text-align: center;
+	padding-left: 0;
+}
+#yearCheck{
+	width: 60px;
+}
+/*员工录入*/
+#homeAddress{
+	width: 300px;
+}
+#otherInfo{
+	width: 250px;
+}
+
+/*搜索*/
+#search-list{
+    position:absolute;
+    left:150px;
+    top:37px;
+    z-index:9;
+    width:165px;
+    height:auto;
+    background:#ffffff;
+    border:1px solid #ccc;
+    box-shadow: 0 1px 6px 0 rgba(0,0,0,.12),0 1px 6px 0 rgba(0,0,0,.12);
+    display:none;
+}
+#search-list>li{
+    width:165px;
+    height:28px!important;
+    line-height:28px;
+    text-indent:6px;
+    margin:0;
+    padding:0;
+    cursor:pointer;
+}
+#search-list>li.active{
+    background-color:#f6f9f9;
+}
+#search-list>li:first-child{
+    border-top:none;
+}
+
+

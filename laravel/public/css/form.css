@@ -1,0 +1,388 @@
+
+/*主体*/
+.dateImg{
+	width: 20px;
+	height: 22px;
+	background: url(../img/datePicker.png) 4px 5px no-repeat;
+	border: none;
+	display: inline-block;
+}
+.content input,.content select{
+	width: 200px;
+	height: 28px;
+	line-height: normal;
+	-moz-border-radius: 3px;      
+    -webkit-border-radius: 3px;   
+    border-radius:3px; 
+    border:1px solid #cccccc;
+    outline: none; 
+    padding: 0 10px;
+}
+.content select{
+    width:222px;
+    height:30px;
+}
+.content input[disabled]{
+	width: 196px;
+	border:none;
+	border-bottom: 1px solid #cccccc;
+	background: #ffffff;
+	-moz-border-radius: 0px;      
+    -webkit-border-radius: 0px;   
+    border-radius:0px; 
+}
+#list{
+	padding: 10px;
+}
+#list li.listChild{
+	height: 40px;
+	line-height: 40px;
+	
+}
+#list ul{
+	height: 40px;
+}
+#list ul li{
+	position: relative;
+	width: 354px;
+	height: 26px;
+	line-height: 26px;
+	padding: 5px 0;
+	float: left;
+}
+#list li div.date{
+	padding:0 65px 0 27px;
+}
+#list li div.date .datePicker{
+	
+}
+#list ul li span{
+	width: 70px;
+	text-align: right;
+    float:left;
+}
+.totalBox{
+	margin-top: 20px;
+	-moz-box-shadow:0px 0px 5px rgba(189, 189, 189, 0.4);              
+    -webkit-box-shadow:0px 0px 5px rgba(189, 189, 189, 0.4);            
+    box-shadow:0 0 10px rgba(189, 189, 189, 0.4);  
+    -moz-border-radius: 5px;      
+    -webkit-border-radius: 5px;   
+    border-radius:5px;   
+    border: 1px solid #CCCCCC;	
+    padding: 10px 10px 30px 10px;
+    padding-left: 29px;
+}
+#oilBtn,#tollBtn,#repairBtn,#fineBtn,#eatBtn,#otherBtn,#companyBtn{
+	width: 82px;
+	height: 30px;
+	line-height: 30px;
+	color: #ffffff;
+	background: #88c149;
+	text-align: center;
+	-moz-border-radius: 5px;      
+    -webkit-border-radius: 5px;   
+    border-radius:5px; 
+	position: absolute;
+	top: 6px;
+	right: 35px;
+}
+.totalBox input[disabled]{
+	width: 80px;
+	text-align: center;
+}
+#oilTotal,#oilMoney{
+	text-align: center;
+}
+.totalBox .total{
+	margin-bottom: 10px;
+}
+.totalBox .total div{
+	height: 30px;
+	line-height: 30px;
+	margin-right: 30px;
+	float: left;
+}
+.totalBox .total div span{
+	
+}
+.totalBox .totalList{
+	border: 1px solid #cccccc;
+	border-bottom: none;
+    position: relative;
+}
+
+.totalBox ul{
+	border-bottom: 1px solid #cccccc;
+	/*margin-bottom: -1px;*/	
+}
+.totalBox ul li{
+	height: 30px;
+	line-height: 30px;
+	padding: 6px;
+	border-right: 1px solid #cccccc;
+	float: left;
+}
+.totalBox ul li.editDel{
+	width: 140px;
+	text-align: center;
+	border-right: none;
+}
+.totalBox ul li.editDel a.del{
+	width: 82px;
+	height: 30px;
+	line-height: 30px;
+	text-align: center;
+	color: #FFFFFF;
+	background: #e12b31;
+	display: inline-block;
+	-moz-border-radius: 5px;      
+    -webkit-border-radius: 5px;   
+    border-radius:5px; 
+}
+.totalBox ul li.editDel a.del:hover{
+	color: #FFFFFF;
+}
+.totalBox ul li select.sel{
+	margin-left: 4px;
+}
+.totalBox ul li .oilNum{
+	width: 70px;
+	text-align: center;
+}
+
+.totalBox ul li .oilMoney{
+	width: 70px;
+	text-align: center;
+}
+
+.totalBox ul li .oilAddress{
+	width: 190px;
+}
+
+.totalBox ul li input{
+	width: 110px;
+	border: none;
+	border-bottom: 1px solid #CCCCCC;
+	-moz-border-radius: 0px;  
+	-webkit-border-radius:0px;   
+    border-radius:0px;   
+    padding-left: 3px;
+}
+
+.totalBox select{
+	width: 70px;
+}
+.totalBox .typeMargin{
+	margin-left: 4px;
+}
+.totalBox select.tollGoCome{
+	width: 56px;
+}
+.totalBox  input.tollName{
+	width: 213px;
+}
+.totalBox  input.tollMoney{
+	width: 70px;
+	text-align: center;
+}
+.totalBox  select{
+	/*width: 89px;*/
+}
+
+
+.totalBox input.repairName{
+	width: 180px;
+}
+.totalBox input.repairMoney{
+	width: 70px;
+	text-align: center;
+}
+.totalBox input.repairAddress{
+	width: 209px;
+}
+/*罚款及金额合计*/
+.totalBox ul li input.fineAddress{
+	width: 458px;
+}
+.totalBox ul li input.fineMoney{
+    width:70px;
+    text-align:center;
+}
+/*伙食费及合计金额*/
+.eatBox{
+	width: 396px;
+	margin-right: 15px;
+	float: left;
+}
+.totalBox ul li input.eatDate{
+	width: 78px;
+}
+.totalBox ul li input.eatMoney{
+	width: 70px;
+	text-align: center;
+}
+#eatBtn{
+	right: 4px;
+}
+.eatBox ul li.editDel{
+	width: 0;
+	padding: 6px 4px 4px 4px;
+}
+/*其他开支及金额合计*/
+.otherBox{
+	/*width: 592px;
+	float: left;*/
+}
+.otherBox ul li.editDel{
+	width: 144px;
+	padding: 6px 4px 4px 4px;
+}
+.totalBox ul li input.otherMoney{
+	width: 70px;
+	text-align: center;
+}
+.totalBox ul li input.otherDate{
+	width: 110px;
+}
+#otherBtn{
+	right: 35px;
+}
+.totalBox ul li input.otherName{
+	width: 486px;
+}
+
+/*领导签字*/
+.sum{
+    padding: 10px;
+    padding-top:40px;
+    padding-left: 220px;
+    clear:both;
+}
+.sum input{
+	width: 144px;
+	border: none;
+	border-bottom: 1px solid #cccccc;
+	 -moz-border-radius: 0px;      
+    -webkit-border-radius: 0px;   
+    border-radius:0px;
+}
+.sum input[type="submit"]{
+    width: 226px;
+    height: 40px;
+    border: none;
+    color: #fff;
+    padding: 0;
+    -webkit-border-radius: 3px;
+    -moz-border-radius: 3px;
+    border-radius: 3px;
+    background-color: #54b4eb;
+    font-size: 16px; 
+    cursor:pointer;
+}
+.sumNum{
+	width: 766px;
+	margin-top: 40px;
+}
+.sumNum li{
+	height: 30px;
+	line-height: 30px;
+	padding: 6px 19px 6px 0;
+	float: left;
+}
+.sumNum input{
+	width: 136px;
+    text-align:center;
+}
+
+.total-wrap{
+	padding-right: 20px;	
+}
+
+.total-wrap li{
+	height: 30px;
+	line-height: 30px;
+	padding: 6px 0;
+}
+.total-wrap li input[type="text"]{
+    text-align:center;
+}
+.total-wrap li button.btn{
+    width: 226px;
+    height: 40px;
+    border: none;
+    color: #fff;
+    padding: 0;
+    -webkit-border-radius: 3px;
+    -moz-border-radius: 3px;
+    border-radius: 3px;
+    background-color: #54b4eb;
+    font-size: 16px;
+}
+
+.addMoney{
+    width:70px!important;
+    text-align:center;
+}
+
+#driverpar,#truckpar,#owner,#categorylist{
+    position:relative;
+}
+#driverlist,#driver2list,#trucklist,#goodslist,#categorylist,#yuangong{
+    position:absolute;
+    top:34px;
+    z-index:9;
+    width:220px;
+    height:auto!important;
+    max-height:300px;
+    background-color:#fff;
+    overflow:hidden;
+    display:none;
+    -moz-box-shadow: 0px 0px 5px #ccc;
+ -webkit-box-shadow: 0px 0px 5px #ccc;
+         box-shadow: 0px 0px 5px #ccc;
+} 
+#driverlist, #driver2list{
+    left:70px;
+}
+#yuangong{
+    top:28px;
+    left:0px;
+}
+#trucklist{
+    left:45px;
+}
+#goodslist{
+    left:70px;
+}
+#categorylist{
+    left:70px;
+}
+#driverlist li,#driver2list li,#trucklist li,#goodslist li, #categorylist li{
+    text-indent:10px;
+} 
+#driverlist li.active,#driver2list li.active,#trucklist li.active,#goodslist li.active,#categorylist li.active{
+    background-color:#999;
+    color:#fff;
+}
+.fin-search{
+    width: 226px;
+    height: 30px;
+    line-height:30px;
+    border: none;
+    color: #fff;
+    padding: 0;
+    margin-left: 69px;
+    -webkit-border-radius: 3px;
+    -moz-border-radius: 3px;
+    border-radius: 3px;
+    background-color: #54b4eb;
+    font-size: 14px;
+    cursor:pointer;
+}
+.licheng{
+    width:110px!important;
+}
+.comMoney{
+    width:89px!important;
+}
