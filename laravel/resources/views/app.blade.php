@@ -20,13 +20,11 @@
 			</a>
 			<div class="btn-group fr" tabindex="1">
 				<button class="btn">
-					<span class="btn-text">admin</span>
+					<span class="btn-text">当前登录用户{{Auth::user()->name}}</span>
 					<strong class="btn-caret"></strong>
 				</button>
 				<ul class="btn-menu">
-					<li><a href="http://www.baidu.com/">前进</a></li>
-					<li><a href="#">喝了</a></li>
-					<li class="menuLast"><a href="#">退出</a></li>
+					<li class="menuLast"><a href="/auth/logout">退出</a></li>
 				</ul>
 			</div>
 		</div>
@@ -35,7 +33,7 @@
 				<h3 class="leftTitle">功能导航</h3>
 				<ul class="leftList">
 					<li>
-						<a href="javascript:void(0);" class="leftLink {{(Request::path() === 'admin') ? 'setOn' : ''}}">
+						<a href="javascript:void(0);" class="leftLink {{(strstr(Request::url(), 'admin') !== false) ? 'setOn' : ''}}">
 							<em></em>
 							<span>系统首页</span>
 						</a>
@@ -46,7 +44,7 @@
 						</ul>
 						<ul>
 							<li>
-								<a href="{{ URL('admin') }}">权限首页</a>
+								<a href="{{ URL('users') }}">权限首页</a>
 							</li>
 						</ul>
 					</li>
