@@ -33,7 +33,7 @@
 				<h3 class="leftTitle">功能导航</h3>
 				<ul class="leftList">
 					<li>
-						<a href="javascript:void(0);" class="leftLink {{(strstr(Request::url(), 'admin') !== false) ? 'setOn' : ''}}">
+						<a href="javascript:void(0);" class="leftLink {{(Request::path() == 'admin') ? 'setOn' : ''}}">
 							<em></em>
 							<span>系统首页</span>
 						</a>
