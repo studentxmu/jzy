@@ -38,6 +38,9 @@
 									<th width="70">司机</th>
 									<th width="537">摘要</th>
 									<th width="80">利润</th>
+                                    @if (\App\User::isLimit('trans-edit', Auth::user()->id) || \App\User::isLimit('trans-delete', Auth::user()->id))
+									<th width="200">操作</th >
+                                    @endif
 								</tr>
 							</thead>
 							<tbody>
@@ -49,6 +52,27 @@
 									<td>{{$transaction->employee->name}}</td>
 									<td style="text-align:left"><?php echo "&nbsp;&nbsp;&nbsp;"; ?>{{$transaction->fromplace . "-" . $transaction->endplace . "-" . $transaction->returnplace . "(" . $transaction->buyer->name . ")" . " 单价："  .$transaction->perprice . ", 开：" . $transaction->cost . ", 卡：" . $transaction->etc()}}</td>
 									<td>{{$transaction->value - $transaction->cost}}</td>
+                                    @if (\App\User::isLimit('trans-edit', Auth::user()->id) || \App\User::isLimit('trans-del', Auth::user()->id))
+									<td>
+                                        @if (\App\User::isLimit('trans-edit', Auth::user()->id))
+										<a class="tableCreat btn-edit" href="{{ URL('admin/transactions/'.$transaction->id.'/edit') }}">
+                                            <i class="fa fa-edit" ></i>
+											编辑
+										</a>
+                                        @endif
+                                        @if (\App\User::isLimit('trans-delete', Auth::user()->id))
+                                        <form class="btn-del-wrap" action="{{ URL('admin/transactions/'.$transaction->id) }}" method="POST" style="display: inline;">
+                                            <a class="btn-del-bg" href="javascript:void(0):">
+                                                <i class="fa fa-trash" ></i>
+                                                删除
+                                            </a>
+                                            <input name="_method" type="hidden" value="DELETE">
+                                            <input type="hidden" name="_token" value="{{ csrf_token() }}">
+                                            <button type="submit" class="btn btn-danger btn-del"> </button>
+                                        </form>
+                                        @endif
+									</td>
+                                    @endif
 								</tr>
                                 @endforeach
 							</tbody>

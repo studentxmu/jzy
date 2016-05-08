@@ -3,6 +3,7 @@
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
 use App\Catagory;
+use App\Logex;
 use Redirect, Input, Auth;
 
 use Illuminate\Http\Request;
@@ -41,14 +42,21 @@ class CatagorysController extends Controller {
             'name'  => 'required|min:2',
         ]);
         $catagory = new Catagory;
+        $logex = new Logex;
         $catagory->name = Input::get('name');
         $catagory->alpha = Input::get('alpha');
         $catagory->firstalpha = Input::get('firstalpha');
         $catagory->infomation = Input::get('infomation');
         $catagory->parent_id = Input::get('parent_id');
         $catagory->type_id = Input::get('type_id');
-
+        $logex->userid = Auth::user()->id;
+        $logex->time = time();
+        $logex->what = '货主录入';
+        $logex->type = 'create';
+        $logex->datafrom = 'null';
+        $logex->datato = $catagory->toJson();
         if ($catagory->save()) {
+            $logex->save();
             return Redirect::to('admin/catagorys')->withErrors('添加成功！');
         } else {
             return Redirect::back()->withErrors('保存失败');
@@ -92,6 +100,8 @@ class CatagorysController extends Controller {
             'name'  => 'required|min:2',
         ]);
         $catagory = Catagory::find($id);
+        $logex = new Logex;
+        $logex->datafrom = $catagory->toJson();
         $catagory->name = Input::get('name');
         $catagory->alpha = Input::get('alpha');
         $catagory->firstalpha = Input::get('firstalpha');
@@ -99,7 +109,14 @@ class CatagorysController extends Controller {
         $catagory->parent_id = Input::get('parent_id');
         $catagory->type_id = Input::get('type_id');
 
+        $logex->userid = Auth::user()->id;
+        $logex->time = time();
+        $logex->what = '货主修改';
+        $logex->type = 'update';
+        $logex->datato = $catagory->toJson();
+
         if ($catagory->save()) {
+            $logex->save();
             return Redirect::to('admin/catagorys')->withErrors('添加成功！');
         } else {
             return Redirect::back()->withErrors('保存失败');
@@ -117,6 +134,14 @@ class CatagorysController extends Controller {
 		//
         $catagory = Catagory::find($id);
         $catagory->delete();
+        $logex = new Logex;
+        $logex->userid = Auth::user()->id;
+        $logex->time = time();
+        $logex->what = '货主删除';
+        $logex->type = 'delete';
+        $logex->datafrom= $catagory->toJson();
+        $logex->datato = 'null';
+        $logex->save();
         return Redirect::back()->withErrors('删除成功');
 	}
 

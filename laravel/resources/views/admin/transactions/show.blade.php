@@ -734,7 +734,7 @@
                                 </div>
 							</li>
 							<li class="on">
-                                <p>地址</p>
+                                <p>名称</p>
                                 <div class="t-wrap">
                                     <input type="text" />
                                 </div>
@@ -966,6 +966,7 @@
             <script>
             $("input[type='text']").attr("disabled",true);
             var results = JSON.parse('<?php echo json_encode($results) ?>');
+            //console.log(results);
             if(results.chaiyou != "" && results != undefined){
                 //柴油
                 var chaiyou = results['chaiyou'];
@@ -1009,23 +1010,24 @@
                 var fine = results['guoqiao']; 
                 if(fine != "" && fine != undefined){
                     if(fine['1'] != "" && fine['1'] != undefined){
-                        if(fine['1']['1'].length>0){
+                        if(fine['1']['1'] != undefined && fine['1']['1'].length>0){
                             addCon(fine['1']['1'],$("#cash-wrap").children('.totalList').eq(0).find('li'))
                         }
-                        if(fine['1']['2'].length>0){
+                        if(fine['1']['2'] != undefined && fine['1']['2'].length>0){
                             addCon(fine['1']['2'],$("#cash-wrap").children('.totalList').eq(1).find('li'))
                         }
                     }
                     if(fine['2'] != "" && fine['2'] != undefined){
-                        if(fine['2']['1'].length>0){
+                        if(fine['2']['1'] != undefined && fine['2']['1'].length>0){
                             addCon(fine['2']['1'],$("#etc-wrap").children('.totalList').eq(0).find('li'))
                         }
-                        if(fine['2']['2'].length>0){
+                        if(fine['2']['2'] != undefined && fine['2']['2'].length>0){
                             addCon(fine['2']['2'],$("#etc-wrap").children('.totalList').eq(1).find('li'))
                         }
                     }
                 }
             }
+                $("#companyMoney").val(results['gongsi']['0'][3]);
             if(results['gongsi'] != "" && results['gongsi'] != undefined){
                 $("#companyMoney").val(results['gongsi']['0'][3]);
             }
@@ -1082,6 +1084,5 @@
                 num = num == parseInt(num) ? num : num.toFixed(2);
                 total.val(num)
             }
-            
             </script>
     @endsection

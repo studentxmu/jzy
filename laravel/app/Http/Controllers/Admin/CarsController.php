@@ -4,7 +4,7 @@ use App\Http\Requests;
 use App\Http\Controllers\Controller;
 
 use Illuminate\Http\Request;
-use App\Car;
+use App\Car, App\Logex;
 use Redirect, Input, Auth;
 
 class CarsController extends Controller {
@@ -140,6 +140,7 @@ class CarsController extends Controller {
             }
         }
         $car = new Car;
+        $logex = new Logex;
         $car->code = Input::get('code');
         $car->vicecode = Input::get('vicecode');
         $car->oilcard = Input::get('oilcard');
@@ -154,7 +155,15 @@ class CarsController extends Controller {
         !empty($newNameAssurance) && $car->assuranceurl = $newNameAssurance;
         !empty($newNameComAssurance) && $car->comassuranceurl = $newNameComAssurance;
 
+        $logex->userid = Auth::user()->id;
+        $logex->time = time();
+        $logex->what = '车辆录入';
+        $logex->type = 'create';
+        $logex->datafrom = 'null';
+        $logex->datato = $car->toJson();
+
         if ($car->save()) {
+            $logex->save();
             return Redirect::to('admin/cars')->withErrors('添加成功！');
         } else {
             return Redirect::back()->withErrors('保存失败');
@@ -300,6 +309,8 @@ class CarsController extends Controller {
             }
         }
         $car = Car::find($id);
+        $logex = new Logex;
+        $logex->datafrom = $car->toJson();
         $car->code = Input::get('code');
         $car->vicecode = Input::get('vicecode');
         $car->oilcard = Input::get('oilcard');
@@ -314,7 +325,14 @@ class CarsController extends Controller {
         !empty($newNameAssurance) && $car->assuranceurl = $newNameAssurance;
         !empty($newNameComAssurance) && $car->comassuranceurl = $newNameComAssurance;
 
+        $logex->userid = Auth::user()->id;
+        $logex->time = time();
+        $logex->what = '车辆修改';
+        $logex->type = 'update';
+        $logex->datato = $car->toJson();
+
         if ($car->save()) {
+            $logex->save();
             return Redirect::to('admin/cars')->withErrors('编辑成功！');
         } else {
             return Redirect::back()->withErrors('保存失败');
@@ -340,6 +358,14 @@ class CarsController extends Controller {
 		//
         $car = Car::find($id);
         $car->status = date('Y');
+        $logex = new Logex;
+        $logex->userid = Auth::user()->id;
+        $logex->time = time();
+        $logex->what = '车辆删除';
+        $logex->type = 'delete';
+        $logex->datafrom= $car->toJson();
+        $logex->datato = 'null';
+        $logex->save();
         if ($car->save()) {
             return Redirect::to('admin/cars/latest')->withErrors('审车成功！');
         } else {

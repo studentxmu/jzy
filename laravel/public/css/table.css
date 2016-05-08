@@ -219,6 +219,14 @@ thead th{
     cursor:pointer;
 
 }
+#check-wrap .txt-after,#check-wrap .txt-before{
+   padding:30px; 
+   word-break:break-all;
+}
+#check-wrap .txt-before{
+    padding-top:50px;
+    padding-bottom:10px;
+}
 
 
 .fin-search{

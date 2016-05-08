@@ -4,11 +4,14 @@ use App\Http\Requests;
 use App\Http\Controllers\Controller;
 
 use Illuminate\Http\Request;
-use App\Employee, App\Workday;
+use App\Employee, App\Workday, App\Logex;
 use Redirect, Input, Auth;
 
 class EmployeesController extends Controller {
 
+	public function __construct()
+    {
+    }
 	/**
 	 * Display a listing of the resource.
 	 *
@@ -101,6 +104,7 @@ class EmployeesController extends Controller {
             }
         }
         $employee = new Employee;
+        $logex = new Logex;
         $employee->name = Input::get('name');
         $employee->alpha = Input::get('alpha');
         $employee->firstalpha = Input::get('firstalpha');
@@ -116,10 +120,18 @@ class EmployeesController extends Controller {
         !empty($newNameIdfront) && $employee->idfronturl = $newNameIdfront;
         !empty($newNameIdend) && $employee->idendurl = $newNameIdend;
         !empty($newNameDrivefront) && $employee->drivefronturl = $newNameDrivefront;
-
+        $logex->userid = Auth::user()->id;
+        $logex->time = time();
+        $logex->what = '员工录入';
+        $logex->type = 'create';
+        $logex->datafrom = 'null';
+        $logex->datato = $employee->toJson();
         if ($employee->save()) {
+            $logex->save();
             return Redirect::to('admin/employees')->withErrors('添加成功！');
         } else {
+            $logex->datato = '员工录入失败' . $employee->name;
+            $logex->save();
             return Redirect::back()->withErrors('保存失败');
         }
 	}
@@ -260,7 +272,9 @@ class EmployeesController extends Controller {
                 $path = $file->move(storage_path() .'/upload', $newNameDrivefront);
             }
         }
+        $logex = new Logex;
         $employee = Employee::find($id);
+        $logex->datafrom = $employee->toJson();
         $employee->name = Input::get('name');
         $employee->alpha = Input::get('alpha');
         $employee->firstalpha = Input::get('firstalpha');
@@ -277,7 +291,14 @@ class EmployeesController extends Controller {
         !empty($newNameIdend) && $employee->idendurl = $newNameIdend;
         !empty($newNameDrivefront) && $employee->drivefronturl = $newNameDrivefront;
 
+        $logex->userid = Auth::user()->id;
+        $logex->time = time();
+        $logex->what = '员工修改';
+        $logex->type = 'update';
+        $logex->datato = $employee->toJson();
+
         if ($employee->save()) {
+            $logex->save();
             return Redirect::to('admin/employees')->withErrors('编辑成功！');
         } else {
             return Redirect::back()->withErrors('保存失败');
@@ -295,6 +316,14 @@ class EmployeesController extends Controller {
 		//
         $employee = Employee::find($id);
         $employee->delete();
+        $logex = new Logex;
+        $logex->userid = Auth::user()->id;
+        $logex->time = time();
+        $logex->what = '员工删除';
+        $logex->type = 'delete';
+        $logex->datafrom= $employee->toJson();
+        $logex->datato = 'null';
+        $logex->save();
         return Redirect::back()->withErrors('删除成功');
 	}
 

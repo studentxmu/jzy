@@ -44,6 +44,10 @@
 <span onclick="WdatePicker({el:'jointime'})" class="dateImg"></span>
 								</div>
 							</li>
+							<li>
+								<span><em class="star">*</em> 摘要：</span>
+                                <input type="text" name="desc" class="form-control validate[required]">
+							</li>
                             <li>
                                 <span><em class="star">*</em> 科目：</span>
                                 <select name="cate_id" id="sel">
@@ -64,10 +68,6 @@
                                 <label for="jieRadio">借</label>
                                 <input type="radio" name="status" value="1" id="daiRadio" class="validate[required]" style="width:25px;margin-left:35px">
                                 <label for="daiRadio">贷</label>
-							</li>
-							<li>
-								<span><em class="star">*</em> 摘要：</span>
-                                <input type="text" name="desc" class="form-control validate[required]">
 							</li>
 							<li>
 								<span><em class="star">*</em> 金额：</span>

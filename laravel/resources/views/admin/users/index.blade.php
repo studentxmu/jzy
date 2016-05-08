@@ -1,16 +1,21 @@
 @extends('app')
         <link href="{{ asset('/css/table.css') }}" rel="stylesheet">
+        <link href="{{ asset('/css/form.css') }}" rel="stylesheet">
 @section('content')
 <div class="content fl">
     <div>
 					<ul class="breadcrumb">
 						<li><a href="{{ URL('admin') }}">主页</a><b>/</b></li>
-						<li><a href="#">货主列表</a><b></b></li>
+						<li><a href="#">用户列表</a><b></b></li>
 					</ul>
 				</div>
 				<div class="inputCon">
 					<div class="wh-bg">
-						<span class="wh-fontBox">货主列表</span>
+						<span class="wh-fontBox">用户列表</span>
+					</div>
+                    <br/>
+					<div class="">
+                        &nbsp;&nbsp;&nbsp;&nbsp;<a href="{{ URL('admin/users/create') }}">+添加用户</a>
 					</div>
                     @if (count($errors) > 0)
                     <div class="alert alert-success">
@@ -18,7 +23,7 @@
                     @foreach ($errors->all() as $error)
                         {{ $error }}
                         @if ($error == "添加成功！")
-                            <a href="{{ URL('admin/buyers/create') }}">继续添加货主</a>
+                            <a href="{{ URL('admin/users/create') }}">继续添加用户</a>
                         @endif
                     @endforeach
                     </div>
@@ -27,32 +32,29 @@
 						<table class="tab">
 							<thead>
 								<tr>
-									<th width="108">姓名</th>
-									<th width="150">公司</th>
-									<th width="90">手机号</th>
-									<th width="355">邮寄地址</th>
-                                    @if (\App\User::isLimit('buyer-edit', Auth::user()->id) || \App\User::isLimit('buyer-delete', Auth::user()->id))
-									<th width="256">编辑</th >
-                                    @endif
+									<th width="34">编号</th>
+									<th width="184">姓名</th>
+									<th width="380">邮箱</th>
+									<th width="84">身份</th>
+									<th width="120">权限 </th>
+									<th width="186">编辑</th >
 								</tr>
 							</tdead>
 							<tbody>
-                            @foreach ($buyers as $buyer)
+                            @foreach ($users as $user)
 								<tr>
-									<td><a href="#" title="{{$buyer->infomation}}">{{ $buyer->name}}</a></td>
-									<td style="text-align:left">{{ $buyer->campany }}</td>
-									<td>{{ $buyer->telephone ? $buyer->telephone : '' }}</td>
-									<td>{{ $buyer->address }}</td>
-                                    @if (\App\User::isLimit('buyer-edit', Auth::user()->id) || \App\User::isLimit('buyer-delete', Auth::user()->id))
+									<td>{{ $user->id }}</td>
+									<td><a href="javascript:;">{{ $user->name}}</a></td>
+									<td>{{ $user->email}}</td>
+									<td>{{ $user->isAdmin() ? '管理员' : '普通用户'}}</td>
+									<td><a href="{{ URL('admin/users/'.$user->id) }}">设置权限</a></td>
 									<td>
-                                        @if (\App\User::isLimit('buyer-edit', Auth::user()->id))
-										<a class="tableCreat btn-edit" href="{{ URL('admin/buyers/'.$buyer->id.'/edit') }}">
+                                        @if (!$user->isAdmin())
+										<a class="tableCreat btn-edit" href="{{ URL('admin/users/'.$user->id.'/edit') }}">
                                             <i class="fa fa-edit" ></i>
 											编辑
 										</a>
-                                        @endif
-                                        @if (\App\User::isLimit('buyer-delete', Auth::user()->id))
-                                        <form class="btn-del-wrap" action="{{ URL('admin/buyers/'.$buyer->id) }}" method="POST" style="display: inline;">
+                                        <form class="btn-del-wrap" action="{{ URL('admin/users/'.$user->id) }}" method="POST" style="display: inline;">
                                             <a class="btn-del-bg" href="javascript:void(0):">
                                                 <i class="fa fa-trash" ></i>
                                                 删除
@@ -60,10 +62,9 @@
                                             <input name="_method" type="hidden" value="DELETE">
                                             <input type="hidden" name="_token" value="{{ csrf_token() }}">
                                             <button type="submit" class="btn btn-danger btn-del"> </button>
-                                        </form>
                                         @endif
+                                        </form>
 									</td>
-                                    @endif
 								</tr>
                                 @endforeach
 							</tbody>
@@ -71,7 +72,7 @@
 					</div>
 				</div>
                 <div class="paginate">
-                <?php echo $buyers->render(); ?>
+                <?php echo $users->render(); ?>
                 </div>
 			</div>
 @endsection

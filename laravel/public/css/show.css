@@ -82,3 +82,30 @@
 .user-info-list li{
 
 }
+.rules-list{
+    padding-top:20px;
+}
+.rules-list li{
+    float:left;
+    width:12.5%; 
+    height:36px;
+    line-height:36px;
+
+}
+.rules-choose-wrap{
+    
+}
+.rules-choose-wrap div{
+   float:left; 
+   margin-left:20px;
+}
+#rules-btn{
+    display:block;
+    width:120px;
+    height:30px;
+    background-color:#2fa4e7;
+    margin:20px auto;
+    border:none;
+    color:#fff;
+    cursor:pointer;
+}

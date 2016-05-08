@@ -10,6 +10,7 @@ use App\Car;
 use App\Buyer;
 use App\Employee;
 use App\Transaction;
+use App\Logex;
 use Redirect, Input, Auth, Session;
 
 class FinancesController extends Controller {
@@ -275,6 +276,7 @@ class FinancesController extends Controller {
 	{
 		//
         $finance = new Finance;
+        $logex = new Logex;
         $typeid = $finance->type_id = Input::get('type_id');
         $finance->happendate = Input::get('happendate');
         $cateid = $finance->cate_id = Input::get('cate_id');
@@ -286,7 +288,15 @@ class FinancesController extends Controller {
         $finance->value = Input::get('jine');
         $finance->status = Input::get('status');
 
+        $logex->userid = Auth::user()->id;
+        $logex->time = time();
+        $logex->what = '财务录入';
+        $logex->type = 'create';
+        $logex->datafrom = 'null';
+        $logex->datato = $finance->toJson();
+    
         if ($finance->save()) {
+            $logex->save();
             if ($cateid == 999999999) {
                 return Redirect::to("admin/finances/latest/$cateid/$carid")->withErrors('添加成功！');
             } else {
@@ -350,6 +360,8 @@ class FinancesController extends Controller {
 	public function update($id)
 	{
         $finance = Finance::find($id);
+        $logex = new Logex;
+        $logex->datafrom = $finance->toJson();
         $typeid = $finance->type_id = Input::get('type_id');
         $finance->happendate = Input::get('happendate');
         $cateid = $finance->cate_id = Input::get('cate_id');
@@ -357,7 +369,14 @@ class FinancesController extends Controller {
         $finance->value = Input::get('jine');
         $finance->status = Input::get('status');
 
+        $logex->userid = Auth::user()->id;
+        $logex->time = time();
+        $logex->what = '财务修改';
+        $logex->type = 'update';
+        $logex->datato = $finance->toJson();
+    
         if ($finance->save()) {
+            $logex->save();
             if (Session::has('currentpage') && Session::has('category')) {
                 $currentpage = Session::pull('currentpage', 'default');
                 $category = Session::pull('category', 'default');
@@ -385,6 +404,14 @@ class FinancesController extends Controller {
 	{
 		//
         $finance = Finance::find($id);
+        $logex = new Logex;
+        $logex->userid = Auth::user()->id;
+        $logex->time = time();
+        $logex->what = '财务删除';
+        $logex->type = 'delete';
+        $logex->datafrom= $finance->toJson();
+        $logex->datato = 'null';
+        $logex->save();
         $finance->delete();
         return Redirect::back()->withErrors('删除成功');
 	}

@@ -5,7 +5,7 @@ use App\Http\Controllers\Controller;
 
 use Illuminate\Http\Request;
 use App\Transaction;
-use App\Detail, App\Finance;
+use App\Detail, App\Finance, App\Logex;
 use App\Car, App\Employee, App\Buyer, App\Buyercheck;
 use Redirect, Input, Auth, Session, DB;
 
@@ -111,6 +111,7 @@ class TransactionsController extends Controller {
         //dd(Input::all());
         DB::beginTransaction();
         $transaction = new Transaction;
+        $logex = new Logex;
         $transaction->happendate = Input::get('happendate');
         $transaction->employee_id = Input::get('driver');
         $driver2 = Input::get('driver2');
@@ -168,6 +169,14 @@ class TransactionsController extends Controller {
         $youhao = Input::get('youhao');
         $danjia = Input::get('danjia');
 
+        $logex->userid = Auth::user()->id;
+        $logex->time = time();
+        $logex->what = '运单录入';
+        $logex->type = 'create';
+        $logex->datafrom = 'null';
+        $logex->datato = '';
+        $logex->datato .= $transaction->toJson();
+
         if ($transaction->save()) {
             //insert finances
             $finance = new Finance;
@@ -181,12 +190,14 @@ class TransactionsController extends Controller {
             $finance->desc = $transaction->fromplace . "-" . $transaction->endplace . "-" . $transaction->returnplace . "(" . $transaction->buyer->name . ")" . $transaction->perprice . ", " . $transaction->cost;
             $finance->value = $transaction->value - $transaction->cost;
             $finance->save();
+            $logex->datato .= $finance->toJson();
 
             //insert buyercheck
             $buyercheck = new Buyercheck;
             $buyercheck->trans_id = $transaction->id;
             $buyercheck->hedui = $buyercheck->kaipiao = $buyercheck->jiesuan = 0;
             $buyercheck->save();
+            $logex->datato .= $buyercheck->toJson();
 
             //insert details
             if (!empty($oilMoney) && is_array($oilMoney)) {
@@ -201,6 +212,7 @@ class TransactionsController extends Controller {
                         $detail->address = $oilAddress[$oilkey];
                         $detail->happendate = $oilDate[$oilkey];
                         $detail->save();
+                        $logex->datato .= $detail->toJson();
                     }
                 }
             }
@@ -217,6 +229,7 @@ class TransactionsController extends Controller {
                         $detail->address = $tollName[$tollkey];
                         $detail->happendate = $transaction->happendate;
                         $detail->save();
+                        $logex->datato .= $detail->toJson();
                     }
                 }
             }
@@ -231,6 +244,7 @@ class TransactionsController extends Controller {
                         $detail->address = $repairAddress[$repairkey];
                         $detail->happendate = $transaction->happendate;
                         $detail->save();
+                        $logex->datato .= $detail->toJson();
                     }
                 }
             }
@@ -245,6 +259,7 @@ class TransactionsController extends Controller {
                         $detail->address = $fineAddress[$finekey];
                         $detail->happendate = $transaction->happendate;
                         $detail->save();
+                        $logex->datato .= $detail->toJson();
                     }
                 }
             }
@@ -259,6 +274,7 @@ class TransactionsController extends Controller {
                         $detail->value = $otherMoney[$otherkey];
                         $detail->happendate = $transaction->happendate;
                         $detail->save();
+                        $logex->datato .= $detail->toJson();
                     }
                 }
             }
@@ -274,11 +290,13 @@ class TransactionsController extends Controller {
                         $detail->value = $danjia[$comkey];
                         $detail->happendate = $transaction->happendate;
                         $detail->save();
+                        $logex->datato .= $detail->toJson();
                     }
                 }
             }
+            $logex->save();
             DB::commit();
-            return Redirect::to('admin/transactions')->withErrors('添加成功！');
+            return Redirect::to('admin/transactions/create')->withErrors('添加成功！');
         } else {
             return Redirect::back()->withErrors('保存失败');
         }
@@ -342,6 +360,34 @@ class TransactionsController extends Controller {
 	public function edit($id)
 	{
 		//
+        $transaction = Transaction::find($id);
+        if (empty($transaction)) {
+            abort(404);
+        }
+        $details = $transaction->details;
+        $results = array();
+        foreach ($details as $detail) {
+            switch ($detail->type_id) {
+                case 1 :
+                    $results['chaiyou'][$detail->cate_id][] = array($detail->desc, $detail->value/$detail->desc, $detail->value, $detail->address, $detail->happendate);
+                break;
+                case 2 :
+                    $results['guoqiao'][$detail->cate_id][$detail->trip_id][] = array($detail->address, $detail->value);
+                break;
+                case 3 :
+                    $results['xiuche'][] = array($detail->value, $detail->address);
+                break;
+                case 4 :
+                    $results['fakuan'][] = array($detail->address, $detail->value);
+                break;
+                case 5 :
+                    $results['qita'][] = array($detail->address, $detail->value);
+                break;
+                case 6 :
+                    $results['gongsi'][] = array($detail->address, $detail->desc, $detail->value, $detail->transaction->baoxiao);
+                break;
+            }
+        }
         $employees = Employee::All();
         $peoples = array();
         foreach ($employees as $employee) {
@@ -372,10 +418,14 @@ class TransactionsController extends Controller {
                 $buyer->id
             );
         }
-        $transaction = Transaction::find($id);
         $data = array(
             'transaction' => $transaction,
+            'details' => $details,
+            'results' => $results,
             'types' => Transaction::$types,
+            'oilTypes' => Transaction::$oilTypes,
+            'roadTypes' => Transaction::$roadTypes,
+            'roadTrips' => Transaction::$roadTrips,
             'peoples' => json_encode($peoples),
             'customers' => json_encode($customers),
             'trucks' => json_encode($trucks),
@@ -393,6 +443,8 @@ class TransactionsController extends Controller {
 	{
 		//
         $transaction = Transaction::find($id);
+        $logex = new Logex;
+        $logex->datafrom = $transaction->toJson();
         $transaction->happendate = Input::get('happendate');
         $transaction->employee_id = Input::get('driver');
         $transaction->car_id = Input::get('truckNum');
@@ -407,7 +459,14 @@ class TransactionsController extends Controller {
         $transaction->value = Input::get('freightTotal');
         $transaction->cost = Input::get('payTotal');
 
+        $logex->userid = Auth::user()->id;
+        $logex->time = time();
+        $logex->what = '运单修改';
+        $logex->type = 'update';
+        $logex->datato = $transaction->toJson();
+
         if ($transaction->save()) {
+            $logex->save();
             $transaction->refreshMoney();
             return Redirect::to('admin/transactions')->withErrors('编辑成功！');
         } else {
@@ -432,6 +491,14 @@ class TransactionsController extends Controller {
         $finance = $transaction->finance;
         $finance->delete();
         $transaction->delete();
+        $logex = new Logex;
+        $logex->userid = Auth::user()->id;
+        $logex->time = time();
+        $logex->what = '运单删除';
+        $logex->type = 'delete';
+        $logex->datafrom= $transaction->toJson();
+        $logex->datato = 'null';
+        $logex->save();
         return Redirect::back()->withErrors('删除成功');
 	}
 

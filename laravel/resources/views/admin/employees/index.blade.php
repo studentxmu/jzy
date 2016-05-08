@@ -47,7 +47,9 @@
 									<th width="120">手机号 </th>
 									<th width="186">身份证号</th>
 									<th width="375">证件下载</th>
+                                    @if (\App\User::isLimit('user-delete', Auth::user()->id))
 									<th width="86">编辑</th >
+                                    @endif
 								</tr>
 							</tdead>
 							<tbody>
@@ -75,6 +77,7 @@
 										</a>
                                         @endif
 									</td>
+                                    @if (\App\User::isLimit('user-delete', Auth::user()->id))
 									<td>
                                         <form class="btn-del-wrap" action="{{ URL('admin/employees/'.$employee->id) }}" method="POST" style="display: inline;">
                                             <a class="btn-del-bg" href="javascript:void(0):">
@@ -86,6 +89,7 @@
                                             <button type="submit" class="btn btn-danger btn-del"> </button>
                                         </form>
 									</td>
+                                    @endif
 								</tr>
                                 @endforeach
 							</tbody>

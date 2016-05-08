@@ -10,7 +10,7 @@ use Redirect, Input, Auth, Session, DB;
 
 class DetailsController extends Controller {
 
-	/**
+    /**
 	 * Display a listing of the resource.
 	 *
 	 * @return Response

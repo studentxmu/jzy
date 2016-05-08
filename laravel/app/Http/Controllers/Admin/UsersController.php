@@ -4,7 +4,7 @@ use App\Http\Requests;
 use App\Http\Controllers\Controller;
 
 use Illuminate\Http\Request;
-use App\User, App\Workday;
+use App\User, App\Workday, App\Permit;
 use Redirect, Input, Auth;
 
 class UsersController extends Controller {
@@ -17,15 +17,12 @@ class UsersController extends Controller {
 	public function index()
 	{
 		//
-        $employees = Employee::orderBy('id')->paginate(25);
-        $departs = Employee::$departs;
+        $users = User::orderBy('id')->paginate(25);
         $data = array(
-            'employees' => $employees,
-            'departs' => $departs,
-            'count' => Employee::count(),
-            'peoples' => json_encode($peoples),
+            'users' => $users,
+            'count' => User::count(),
         );
-		return view('admin.employees.index', $data);
+		return view('admin.users.index', $data);
 	}
 
 	/**
@@ -36,7 +33,7 @@ class UsersController extends Controller {
 	public function create()
 	{
 		//
-        return view('admin.employees.create');
+        return view('admin.users.create');
 	}
 
 	/**
@@ -50,65 +47,17 @@ class UsersController extends Controller {
         $this->validate($request, [
             //'address'  => 'required|min:10',
         ]);
-        if (Input::hasFile('image'))
-        {
-            $file = Input::file('image');
-            if ($file->isValid()) {
-                $clientName = $file->getClientOriginalName();
-                $extension = $file->getClientOriginalExtension(); 
-                $newNameIamge = md5(date('ymdhis').$clientName).".".$extension;
-                $path = $file->move('images', $newNameIamge);
-            }
-        }
-        if (Input::hasFile('idfront'))
-        {
-            $file = Input::file('idfront');
-            if ($file->isValid()) {
-                $clientName = $file->getClientOriginalName();
-                $extension = $file->getClientOriginalExtension(); 
-                $newNameIdfront = md5(date('ymdhis').$clientName).".".$extension;
-                $path = $file->move(storage_path() .'/upload', $newNameIdfront);
-            }
-        }
-        if (Input::hasFile('idend'))
-        {
-            $file = Input::file('idend');
-            if ($file->isValid()) {
-                $clientName = $file->getClientOriginalName();
-                $extension = $file->getClientOriginalExtension(); 
-                $newNameIdend = md5(date('ymdhis').$clientName).".".$extension;
-                $path = $file->move(storage_path() .'/upload', $newNameIdend);
-            }
-        }
-        if (Input::hasFile('drivefront'))
-        {
-            $file = Input::file('drivefront');
-            if ($file->isValid()) {
-                $clientName = $file->getClientOriginalName();
-                $extension = $file->getClientOriginalExtension(); 
-                $newNameDrivefront = md5(date('ymdhis').$clientName).".".$extension;
-                $path = $file->move(storage_path() .'/upload', $newNameDrivefront);
-            }
-        }
-        $employee = new Employee;
-        $employee->name = Input::get('name');
-        $employee->alpha = Input::get('alpha');
-        $employee->firstalpha = Input::get('firstalpha');
-        $employee->sex = Input::get('sex');
-        $employee->mobile = intval(Input::get('mobile'));
-        $employee->idcode = Input::get('idcode');
-        $employee->drivecode = Input::get('drivecode');
-        $employee->jointime = '2000-01-01';
-        $employee->lefttime = '2099-01-01';
-        $employee->address = Input::get('address');
-        $employee->depart_id = Input::get('depart_id');
-        !empty($newNameIamge) && $employee->imageurl = $newNameIamge;
-        !empty($newNameIdfront) && $employee->idfronturl = $newNameIdfront;
-        !empty($newNameIdend) && $employee->idendurl = $newNameIdend;
-        !empty($newNameDrivefront) && $employee->drivefronturl = $newNameDrivefront;
+        $user = new User;
+        $user->name = Input::get('name');
+        $user->email = Input::get('email');
+        $user->password = bcrypt(Input::get('password'));
 
-        if ($employee->save()) {
-            return Redirect::to('admin/employees')->withErrors('添加成功！');
+        if ($user->save()) {
+            $permit = new Permit;
+            $permit->user_id = $user->id;
+            $permit->data = '';
+            $permit->save();
+            return Redirect::to('admin/users')->withErrors('添加成功！');
         } else {
             return Redirect::back()->withErrors('保存失败');
         }
@@ -122,17 +71,56 @@ class UsersController extends Controller {
 	 */
 	public function show($id)
 	{
-        $employee = Employee::find($id);
-        $departs = Employee::$departs;
-        $workdays = $employee->liushui();
-        $kaoqins = $employee->kaoqin();
+        $user = User::find($id);
+        $permits = array();
+        if (!empty($user->permit->data)) {
+            $permits = explode(',', $user->permit->data);
+        }
         $data = array(
-            'employee' => $employee,
-            'departs' => $departs,
-            'workdays' => $workdays,
-            'kaoqins' => $kaoqins,
+            'user' => $user,
+            'names' => User::$actionnames,
+            'permits' => $permits,
         );
-		return view('admin.employees.show', $data);
+		return view('admin.users.show', $data);
+	}
+
+	/**
+	 * Display the specified resource.
+	 *
+	 * @param  int  $id
+	 * @return Response
+	 */
+	public function settings($userid)
+	{
+        $permit = Permit::where('user_id', '=', $userid)->take(1)->get();
+        if (!empty($permit) && isset($permit[0])) {
+            $permit = $permit[0];
+        }
+        if (empty($permit->id)) {
+            $permit = new Permit;
+        }
+        $permits = Input::get('permits');
+        $permitsdata = '';
+        if (!empty($permits) && is_array($permits)) {
+            $actionnames = User::$actionnames;
+            $permitsarray = array();
+            foreach ($actionnames as $key=>$val) {
+                $permitsarray[$val] = 0;
+                if (isset($permits[$val]) && $permits[$val] == 1) {
+                    $permitsarray[$val] = 1;
+                }
+            }
+            $permitsdata = implode(',', $permitsarray);
+        }
+
+        $permit->user_id = $userid;
+        $permit->data = $permitsdata;
+
+        if ($permit->save()) {
+            return Redirect::to('admin/users/'.$userid)->withErrors('编辑成功！');
+        } else {
+            return Redirect::back()->withErrors('保存失败');
+        }
 	}
 
 	/**
@@ -143,55 +131,11 @@ class UsersController extends Controller {
 	 */
 	public function edit($id)
 	{
-        $employee = Employee::find($id);
-        $departs = Employee::$departs;
+        $user = User::find($id);
         $data = array(
-            'employee' => $employee,
-            'departs' => $departs,
+            'user' => $user,
         );
-		return view('admin.employees.edit', $data);
-	}
-
-	/**
-	 * @param  int  $id
-	 * @return Response
-	 */
-	public function download($id, $type)
-	{
-		//
-        $employee = Employee::find($id);
-        switch ($type) {
-            case '1':
-                {
-                    $url = $employee->idfronturl;
-                    $name = '-身份证-正面';
-                    break;
-                }
-            case '2':
-                {
-                    $url = $employee->idendurl;
-                    $name = '-身份证-反面';
-                    break;
-                }
-            case '3':
-                {
-                    $url = $employee->drivefronturl;
-                    $name = '-行驶证-正面';
-                    break;
-                }
-            case '4':
-            default:
-                {
-                    $url = $employee->driveendurl;
-                    $name = '-行驶证-反面';
-                    break;
-                }
-        }
-        if (!empty($url)) {
-            $pathToFile = storage_path() . '/upload/' . $url;
-            return response()->download($pathToFile);
-        }
-        
+		return view('admin.users.edit', $data);
 	}
 
 	/**
@@ -203,72 +147,19 @@ class UsersController extends Controller {
 	public function update(Request $request, $id)
 	{
 		//
-        $this->validate($request, [
-           // 'address'  => 'required|min:10',
-        ]);
-        if (Input::hasFile('image'))
-        {
-            $file = Input::file('image');
-            if ($file->isValid()) {
-                $allowed_extensions = ["png", "jpg", "gif"];
-                if ($file->getClientOriginalExtension() && !in_array($file->getClientOriginalExtension(), $allowed_extensions)) {
-                    return Redirect::back()->withErrors('You may only upload png, jpg or gif.');
-                }
-                $clientName = $file->getClientOriginalName();
-                $extension = $file->getClientOriginalExtension(); 
-                $newNameIamge = md5(date('ymdhis').$clientName).".".$extension;
-                $path = $file->move('images', $newNameIamge);
+        $user = User::find($id);
+        $user->name = Input::get('name');
+        $user->email = Input::get('email');
+        $password = Input::get('password');
+        if (!empty($password)) {
+            if (strlen($password) < 6) {
+                return Redirect::back()->withErrors('密码位数必须大于6');
             }
+            $user->password = bcrypt($password);
         }
-        if (Input::hasFile('idfront'))
-        {
-            $file = Input::file('idfront');
-            if ($file->isValid()) {
-                $clientName = $file->getClientOriginalName();
-                $extension = $file->getClientOriginalExtension(); 
-                $newNameIdfront = md5(date('ymdhis').$clientName).".".$extension;
-                $path = $file->move(storage_path() .'/upload', $newNameIdfront);
-            }
-        }
-        if (Input::hasFile('idend'))
-        {
-            $file = Input::file('idend');
-            if ($file->isValid()) {
-                $clientName = $file->getClientOriginalName();
-                $extension = $file->getClientOriginalExtension(); 
-                $newNameIdend = md5(date('ymdhis').$clientName).".".$extension;
-                $path = $file->move(storage_path() .'/upload', $newNameIdend);
-            }
-        }
-        if (Input::hasFile('drivefront'))
-        {
-            $file = Input::file('drivefront');
-            if ($file->isValid()) {
-                $clientName = $file->getClientOriginalName();
-                $extension = $file->getClientOriginalExtension(); 
-                $newNameDrivefront = md5(date('ymdhis').$clientName).".".$extension;
-                $path = $file->move(storage_path() .'/upload', $newNameDrivefront);
-            }
-        }
-        $employee = Employee::find($id);
-        $employee->name = Input::get('name');
-        $employee->alpha = Input::get('alpha');
-        $employee->firstalpha = Input::get('firstalpha');
-        $employee->sex = Input::get('sex');
-        $employee->mobile = intval(Input::get('mobile'));
-        $employee->idcode = Input::get('idcode');
-        $employee->drivecode = Input::get('drivecode');
-        $employee->jointime = '2000-01-01';
-        $employee->lefttime = '2099-01-01';
-        $employee->address = Input::get('address');
-        $employee->depart_id = Input::get('depart_id');
-        !empty($newNameIamge) && $employee->imageurl = $newNameIamge;
-        !empty($newNameIdfront) && $employee->idfronturl = $newNameIdfront;
-        !empty($newNameIdend) && $employee->idendurl = $newNameIdend;
-        !empty($newNameDrivefront) && $employee->drivefronturl = $newNameDrivefront;
 
-        if ($employee->save()) {
-            return Redirect::to('admin/employees')->withErrors('编辑成功！');
+        if ($user->save()) {
+            return Redirect::to('admin/users')->withErrors('编辑成功！');
         } else {
             return Redirect::back()->withErrors('保存失败');
         }
@@ -283,8 +174,8 @@ class UsersController extends Controller {
 	public function destroy($id)
 	{
 		//
-        $employee = Employee::find($id);
-        $employee->delete();
+        $user = User::find($id);
+        $user->delete();
         return Redirect::back()->withErrors('删除成功');
 	}
 

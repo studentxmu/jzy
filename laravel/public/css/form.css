@@ -280,6 +280,9 @@
     font-size: 16px; 
     cursor:pointer;
 }
+.sum input[type="submit"].active{
+    background-color: #9a9a9a;
+}
 .sumNum{
 	width: 766px;
 	margin-top: 40px;

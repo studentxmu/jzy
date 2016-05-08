@@ -33,56 +33,72 @@
 				<h3 class="leftTitle">功能导航</h3>
 				<ul class="leftList">
 					<li>
-						<a href="javascript:void(0);" class="leftLink {{(Request::path() == 'admin') ? 'setOn' : ''}}">
+						<a href="javascript:void(0);" class="leftLink {{(Request::path() == 'admin' || (strstr(Request::url(), 'users') !== false)) ? 'setOn' : ''}}">
 							<em></em>
 							<span>系统首页</span>
 						</a>
+                        @if (\App\User::isLimit('dashboard', Auth::user()->id))
 						<ul>
 							<li>
 								<a href="{{ URL('admin') }}">Dashboard</a>
 							</li>
 						</ul>
+                        @endif
+                        @if (\App\User::isLimit('permission', Auth::user()->id))
 						<ul>
 							<li>
-								<a href="{{ URL('users') }}">权限首页</a>
+								<a href="{{ URL('admin/users') }}">权限首页</a>
 							</li>
 						</ul>
+                        @endif
 					</li>
 					<li>
 						<a href="javascript:void(0);" class="leftLink {{(strstr(Request::url(), 'finances') !== false && strstr(Request::url(), 'search') === false) ? 'setOn' : ''}}">
 							<em></em>
 							<span>财务信息</span>
 						</a>
+                        @if (\App\User::isLimit('finance-latest', Auth::user()->id))
 						<ul>
 							<li>
 								<a href="{{ URL('admin/finances/latest/2') }}">公司流水账目</a>
 							</li>
 						</ul>
+                        @endif
+                        @if (\App\User::isLimit('finance-list', Auth::user()->id))
 						<ul>
 							<li>
 								<a href="{{ URL('admin/finances/category/2') }}">公司分类账目</a>
 							</li>
 						</ul>
+                        @endif
+                        @if (\App\User::isLimit('finance-add', Auth::user()->id))
 						<ul>
 							<li>
 								<a href="{{ URL('admin/finances/create/2') }}">录入公司账目</a>
 							</li>
 						</ul>
+                        @endif
+                        @if (\App\User::isLimit('finance-latest', Auth::user()->id))
 						<ul>
 							<li>
 								<a href="{{ URL('admin/finances/latest/1') }}">车队流水账目</a>
 							</li>
 						</ul>
+                        @endif
+                        @if (\App\User::isLimit('finance-list', Auth::user()->id))
 						<ul>
 							<li>
 								<a href="{{ URL('admin/finances/category/1') }}">车队分类账目</a>
 							</li>
 						</ul>
+                        @endif
+                        @if (\App\User::isLimit('finance-add', Auth::user()->id))
 						<ul>
 							<li>
 								<a href="{{ URL('admin/finances/create/1') }}">录入车队账目</a>
 							</li>
 						</ul>
+                        @endif
 					</li>
 					<li>
 						<a href="javascript:void(0);" class="leftLink {{(strstr(Request::url(), 'transaction') !== false) ? 'setOn' : ''}}">
@@ -90,12 +106,16 @@
 							<span>运单信息</span>
 						</a>
 						<ul>
+                        @if (\App\User::isLimit('trans-index', Auth::user()->id))
 							<li>
 								<a href="{{ URL('admin/transactions') }}">运单列表</a>
 							</li>
+                        @endif
+                        @if (\App\User::isLimit('trans-add', Auth::user()->id))
 							<li>
 								<a href="{{ URL('admin/transactions/create') }}">运单录入</a>
 							</li>
+                        @endif
 						</ul>
 					</li>
 					<li>
@@ -104,15 +124,21 @@
 							<span>员工管理</span>
 						</a>
 						<ul>
+                        @if (\App\User::isLimit('user-index', Auth::user()->id))
 							<li>
 								<a href="{{ URL('admin/employees') }}">员工列表</a>
 							</li>
+                        @endif
+                        @if (\App\User::isLimit('user-add', Auth::user()->id))
 							<li>
 								<a href="{{ URL('admin/employees/create') }}">员工录入</a>
 							</li>
+                        @endif
+                        @if (\App\User::isLimit('user-add', Auth::user()->id))
 							<li>
 								<a href="{{ URL('admin/workdays/create') }}">工时录入</a>
 							</li>
+                        @endif
 						</ul>
 					</li>
 					<li>
@@ -121,15 +147,21 @@
 							<span>车辆管理</span>
 						</a>
 						<ul>
+                        @if (\App\User::isLimit('car-index', Auth::user()->id))
 							<li>
 								<a href="{{ URL('admin/cars') }}">车辆列表</a>
 							</li>
+                        @endif
+                        @if (\App\User::isLimit('car-add', Auth::user()->id))
 							<li>
 								<a href="{{ URL('admin/cars/create') }}">车辆录入</a>
 							</li>
+                        @endif
+                        @if (\App\User::isLimit('car-audit', Auth::user()->id))
 							<li>
 								<a href="{{ URL('admin/cars/latest') }}">待审车辆</a>
 							</li>
+                        @endif
 						</ul>
 					</li>
 					<li>
@@ -138,18 +170,26 @@
 							<span>货主管理</span>
 						</a>
 						<ul>
+                        @if (\App\User::isLimit('buyer-index', Auth::user()->id))
 							<li>
 								<a href="{{ URL('admin/buyers/category') }}">分类账目</a>
 							</li>
+                        @endif
+                        @if (\App\User::isLimit('buyer-export', Auth::user()->id))
 							<li>
 								<a href="{{ URL('admin/buyers/exportall') }}">货主导出</a>
 							</li>
+                        @endif
+                        @if (\App\User::isLimit('buyer-index', Auth::user()->id))
 							<li>
 								<a href="{{ URL('admin/buyers') }}">货主列表</a>
 							</li>
+                        @endif
+                        @if (\App\User::isLimit('buyer-add', Auth::user()->id))
 							<li>
 								<a href="{{ URL('admin/buyers/create') }}">货主录入</a>
 							</li>
+                        @endif
 						</ul>
 					</li>
 					<li>
@@ -158,35 +198,54 @@
 							<span>科目管理</span>
 						</a>
 						<ul>
+                        @if (\App\User::isLimit('cate-index', Auth::user()->id))
 							<li>
 								<a href="{{ URL('admin/catagorys') }}">科目列表</a>
 							</li>
+                        @endif
+                        @if (\App\User::isLimit('cate-add', Auth::user()->id))
 							<li>
 								<a href="{{ URL('admin/catagorys/create') }}">科目录入</a>
 							</li>
+                        @endif
 						</ul>
 					</li>
 					<li>
-						<a href="javascript:void(0);" class="leftLink {{(strstr(Request::url(), 'search') !== false) ? 'setOn' : ''}}">
+						<a href="javascript:void(0);" class="leftLink {{(strstr(Request::url(), 'search') !== false || strstr(Request::url(), 'admin/logex') !== false) ? 'setOn' : ''}}">
 							<em></em>
 							<span>高级查询</span>
 						</a>
 						<ul>
+                        @if (\App\User::isLimit('finance-search', Auth::user()->id))
 							<li>
 								<a href="{{ URL('admin/finances/search') }}">财务高级查询</a>
 							</li>
+                        @endif
+                        @if (\App\User::isLimit('trans-search', Auth::user()->id))
 							<li>
 								<a href="{{ URL('admin/details/search') }}">运单开支查询</a>
 							</li>
+                        @endif
+                        @if (\App\User::isLimit('', Auth::user()->id))
 							<li>
 								<a href="#">报表导出</a>
 							</li>
+                        @endif
+                        @if (\App\User::isLimit('', Auth::user()->id))
 							<li>
 								<a href="#">工资明细</a>
 							</li>
+                        @endif
+                        @if (\App\User::isLimit('', Auth::user()->id))
 							<li>
 								<a href="http://www.hcharts.cn/demo/index.php" target="_blank">图表预测</a>
 							</li>
+                        @endif
+                        @if (\App\User::isLimit('log-view', Auth::user()->id))
+							<li>
+								<a href="{{ URL('admin/logex') }}">日志查询</a>
+							</li>
+                        @endif
 						</ul>
 					</li>
 				</ul>
@@ -197,7 +256,7 @@
 			<!--页脚开始-->
 			<div class="footer fl">
 				 <p class="copyright">
-				 	© <a href="http://tjjinzhengyang.com" target="_blank">金正阳物流有限公司</a> 1997 - 2015
+				 	© <a href="http://tjjinzhengyang.com" target="_blank">金正阳物流有限公司</a> 1997 - 2016
 				 </p>
 				<p class="powered-by">
 					Powered by: <a href="http://tjjinzhengyang.com">Studentxmu</a>

@@ -5,7 +5,7 @@ use App\Http\Controllers\Controller;
 
 use Illuminate\Http\Request;
 use App\Workday;
-use App\Employee;
+use App\Employee, App\Logex;
 use Redirect, Input, Auth, DB;
 
 class WorkdaysController extends Controller {
@@ -43,6 +43,7 @@ class WorkdaysController extends Controller {
 	{
 		//
         $workday = new Workday();
+        $logex = new Logex();
         $begintime = Input::get('begintime');
         $type = Input::get('type');
         $workday->employee_id = Input::get('employee_id');
@@ -59,8 +60,16 @@ class WorkdaysController extends Controller {
         if (!empty($lasttype[0]) && $lasttype[0]->type == $type) {
             return Redirect::back()->withErrors('请检查当前上工类型，和上次重复');
         }
+    
+        $logex->userid = Auth::user()->id;
+        $logex->time = time();
+        $logex->what = '上工录入';
+        $logex->type = 'create';
+        $logex->datafrom = 'null';
+        $logex->datato = $workday->toJson();
 
         if ($workday->save()) {
+            $logex->save();
             return Redirect::to('admin/employees')->withErrors('添加成功！');
         } else {
             return Redirect::back()->withErrors('保存失败');
@@ -110,6 +119,8 @@ class WorkdaysController extends Controller {
 	{
 		//
         $workday = Workday::find($id);
+        $logex = new Logex;
+        $logex->datafrom = $workday->toJson();
         $begintime = Input::get('begintime');
         $endtime = Input::get('endtime');
         $Date_List_a1 = explode("-" , $begintime);
@@ -123,7 +134,14 @@ class WorkdaysController extends Controller {
         $workday->days = $days;
         $workday->comments = Input::get('comments');
 
+        $logex->userid = Auth::user()->id;
+        $logex->time = time();
+        $logex->what = '上工修改';
+        $logex->type = 'update';
+        $logex->datato = $workday->toJson();
+
         if ($workday->save()) {
+            $logex->save();
             return Redirect::to('admin/employees/'.Input::get('employee_id'))->withErrors('编辑成功！');
         } else {
             return Redirect::back()->withErrors('保存失败');
@@ -141,6 +159,14 @@ class WorkdaysController extends Controller {
 		//
         $workday = Workday::find($id);
         $workday->delete();
+        $logex = new Logex;
+        $logex->userid = Auth::user()->id;
+        $logex->time = time();
+        $logex->what = '上工删除';
+        $logex->type = 'delete';
+        $logex->datafrom= $workday->toJson();
+        $logex->datato = 'null';
+        $logex->save();
         return Redirect::back()->withErrors('删除成功');
 	}
 

@@ -220,61 +220,61 @@
 							</li>
 							<li class="on">
                                 <p>地址</p>
-                                <div class="t-wrap">
+                                <div class="t-wrap no-wrap">
                                     <input type="text" />
                                 </div>
-                                <div class="t-wrap">
+                                <div class="t-wrap no-wrap">
                                     <input type="text" />
                                 </div>
-                                <div class="t-wrap">
+                                <div class="t-wrap no-wrap">
                                     <input type="text" />
                                 </div>
-                                <div class="t-wrap">
+                                <div class="t-wrap no-wrap">
                                     <input type="text" />
                                 </div>
-                                <div class="t-wrap">
+                                <div class="t-wrap no-wrap">
                                     <input type="text" />
                                 </div>
-                                <div class="t-wrap">
+                                <div class="t-wrap no-wrap">
                                     <input type="text" />
                                 </div>
-                                <div class="t-wrap">
+                                <div class="t-wrap no-wrap">
                                     <input type="text" />
                                 </div>
-                                <div class="t-wrap">
+                                <div class="t-wrap no-wrap">
                                     <input type="text" />
                                 </div>
-                                <div class="t-wrap">
+                                <div class="t-wrap no-wrap">
                                     <input type="text" />
                                 </div>
 							</li>
 							<li class="on">
                                 <p>日期</p>
-                                <div class="t-wrap">
+                                <div class="t-wrap no-wrap">
                                     <input type="text" id="oilDate1" onclick="WdatePicker({el:'oilDate1'})" readonly/>
                                 </div>
-                                <div class="t-wrap">
+                                <div class="t-wrap no-wrap">
                                     <input type="text" id="oilDate2" onclick="WdatePicker({el:'oilDate2'})" readonly/>
                                 </div>
-                                <div class="t-wrap">
+                                <div class="t-wrap no-wrap">
                                     <input type="text" id="oilDate3" onclick="WdatePicker({el:'oilDate3'})" readonly/>
                                 </div>
-                                <div class="t-wrap">
+                                <div class="t-wrap no-wrap">
                                     <input type="text" id="oilDate4" onclick="WdatePicker({el:'oilDate4'})" readonly/>
                                 </div>
-                                <div class="t-wrap">
+                                <div class="t-wrap no-wrap">
                                     <input type="text" id="oilDate5" onclick="WdatePicker({el:'oilDate5'})" readonly/>
                                 </div>
-                                <div class="t-wrap">
+                                <div class="t-wrap no-wrap">
                                     <input type="text" id="oilDate6" onclick="WdatePicker({el:'oilDate6'})" readonly/>
                                 </div>
-                                <div class="t-wrap">
+                                <div class="t-wrap no-wrap">
                                     <input type="text" id="oilDate7" onclick="WdatePicker({el:'oilDate7'})" readonly/>
                                 </div>
-                                <div class="t-wrap">
+                                <div class="t-wrap no-wrap">
                                     <input type="text" id="oilDate8" onclick="WdatePicker({el:'oilDate8'})" readonly/>
                                 </div>
-                                <div class="t-wrap">
+                                <div class="t-wrap no-wrap">
                                     <input type="text" id="oilDate9" onclick="WdatePicker({el:'oilDate9'})" readonly/>
                                 </div>
 							</li>
@@ -734,7 +734,7 @@
                                 </div>
 							</li>
 							<li class="on">
-                                <p>地址</p>
+                                <p>名称</p>
                                 <div class="t-wrap">
                                     <input type="text" />
                                 </div>

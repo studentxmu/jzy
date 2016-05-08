@@ -26,6 +26,9 @@ $(function(){
 		$ulSiblings.slideUp(200);
 	});
 	$link.each(function(){
+        if($(this).next().children().length == 0){
+            $(this).parent().hide();
+        }
         if($(this).hasClass("setOn")){
            $(this).trigger("click");
         }
@@ -42,22 +45,6 @@ $(function(){
 		},300);
 		
 	});
-//	.click(function(){
-//		$secondMenu.removeClass('setOn over')
-//				   .css('margin-left','0');
-//		$(this).removeClass('over')
-//			   .addClass('setOn')
-//			   .css('margin-left','8px');
-//		var $ul=$(this).siblings('ul');
-//			$siblings=$(this).parent().siblings('li');
-//			$linkSiblings=$siblings.children('a.leftLink');
-//			$ulSiblings=$siblings.children('ul');
-//		$ul.show();
-//		$linkSiblings.removeClass('setOn').css('margin','0');
-//		$ulSiblings.hide();
-//	});
-
-
 	
 	
 	var $caret=$(".btn-caret");
@@ -110,4 +97,23 @@ $(function(){
     });
 
     /*表单验证结束*/
+
+
+    //阻止回车表单提交
+    $(document).keydown(function(e){
+        e = e || window.event;
+        var keycode = e.which ? e.which : e.keyCode;
+        if(keycode == 13){
+            e.preventDefault();
+        }
+    });
+
+
+    //登出登录
+    $(".header").find(".btn-group").on("mouseenter",function(){
+        $(this).children(".btn-menu").show();
+    });
+    $(".header").find(".btn-group").on("mouseleave",function(){
+        $(this).children(".btn-menu").hide();
+    });
 });

@@ -46,7 +46,9 @@
 									<th width="110">所属公司</th>
 									<th width="120">购车日期</th>
 									<th width="420">证件下载</th>
+                                    @if (\App\User::isLimit('car-delete', Auth::user()->id))
 									<th width="86">编辑</th >
+                                    @endif
 								</tr>
 							</tdead>
 							<tbody>
@@ -78,6 +80,7 @@
 										</a>
                                         @endif
 									</td>
+                                    @if (\App\User::isLimit('car-delete', Auth::user()->id))
 									<td>
                                         <form class="btn-del-wrap" action="{{ URL('admin/cars/'.$car->id) }}" method="POST" style="display: inline;">
                                             <a class="btn-del-bg" href="javascript:void(0):">
@@ -89,6 +92,7 @@
                                             <button type="submit" class="btn btn-danger btn-del"> </button>
                                         </form>
 									</td>
+                                    @endif
 								</tr>
                                 @endforeach
 							</tbody>

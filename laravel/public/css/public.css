@@ -133,15 +133,15 @@ a:hover,a:hover span{
 	vertical-align: middle;
 }
 .btn-group .btn-menu{
-	width: 120px;
+	width: 94px;
 	border: 1px solid #cccccc;
 	background: #ffffff;
 	-moz-border-radius: 5px;      
     -webkit-border-radius: 5px;   
     border-radius:5px;  
 	position: absolute;
-	left: -28px;
-	top: 40px;
+	left: 0px;
+	top: 38px;
 	z-index: 9;
 	display: none;
 }
@@ -152,7 +152,7 @@ a:hover,a:hover span{
 	height: 30px;
 	line-height: 30px;
 	color: #333333;
-	text-indent: 20px;
+    text-align:center;
 	display: block;
 }
 .btn-group .btn-menu li.menuLast{

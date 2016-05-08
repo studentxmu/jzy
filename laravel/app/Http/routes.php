@@ -36,6 +36,10 @@ Route::group(['prefix' => 'admin', 'namespace' => 'Admin', 'middleware' => 'auth
   Route::resource('pages', 'PagesController');
   Route::resource('comments', 'CommentsController');
   Route::resource('employees', 'EmployeesController');
+  Route::get('logex/viewlog', 'LogexController@viewlog');
+  Route::resource('logex', 'LogexController');
+  Route::post('users/settings/{userid}', 'UsersController@settings');
+  Route::resource('users', 'UsersController');
   Route::get('cars/latest', 'CarsController@latest');
   Route::post('cars/audit/{id}', 'CarsController@audit');
   Route::resource('cars', 'CarsController');

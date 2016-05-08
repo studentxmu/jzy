@@ -31,7 +31,9 @@
 									<th width="100">科目类型</th>
 									<th width="160">父级科目名称</th>
 									<th width="395">备注</th>
+                                    @if (\App\User::isLimit('cate-edit', Auth::user()->id) || \App\User::isLimit('cate-delete', Auth::user()->id))
 									<th width="206">编辑</th >
+                                    @endif
 								</tr>
 							</tdead>
 							<tbody>
@@ -42,11 +44,15 @@
                                     <?php $fukemu = \App\Catagory::find($catagory->parent_id); ?>
 									<td>{{ $catagory->parent_id == 0 ? '暂无' : $fukemu->name}}</td>
 									<td>{{ $catagory->infomation}}</td>
+                                    @if (\App\User::isLimit('cate-edit', Auth::user()->id) || \App\User::isLimit('cate-delete', Auth::user()->id))
 									<td>
+                                        @if (\App\User::isLimit('cate-edit', Auth::user()->id))
 										<a class="tableCreat btn-edit" href="{{ URL('admin/catagorys/'.$catagory->id.'/edit') }}">
                                             <i class="fa fa-edit" ></i>
 											编辑
 										</a>
+                                        @endif
+                                        @if (\App\User::isLimit('cate-delete', Auth::user()->id))
                                         <form class="btn-del-wrap" action="{{ URL('admin/catagorys/'.$catagory->id) }}" method="POST" style="display: inline;">
                                             <a class="btn-del-bg" href="javascript:void(0):">
                                                 <i class="fa fa-trash" ></i>
@@ -56,7 +62,9 @@
                                             <input type="hidden" name="_token" value="{{ csrf_token() }}">
                                             <button type="submit" class="btn btn-danger btn-del"> </button>
                                         </form>
+                                        @endif
 									</td>
+                                    @endif
 								</tr>
                                 @endforeach
 							</tbody>

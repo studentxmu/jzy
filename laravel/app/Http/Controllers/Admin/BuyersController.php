@@ -4,7 +4,7 @@ use App\Http\Requests;
 use App\Http\Controllers\Controller;
 
 use Illuminate\Http\Request;
-use App\Buyer, App\Buyercheck;
+use App\Buyer, App\Buyercheck, App\Logex;
 use App\Transaction;
 use Redirect, Input, Auth, DB, Excel;
 
@@ -249,6 +249,7 @@ class BuyersController extends Controller {
             'name'  => 'required|min:2',
         ]);
         $buyer = new Buyer;
+        $logex = new Logex;
         $buyer->name = Input::get('name');
         $buyer->alpha = Input::get('alpha');
         $buyer->firstalpha = Input::get('firstalpha');
@@ -258,7 +259,15 @@ class BuyersController extends Controller {
         $buyer->telephone = intval(Input::get('telephone'));
         $buyer->phonenum = Input::get('phonenum');
 
+        $logex->userid = Auth::user()->id;
+        $logex->time = time();
+        $logex->what = '货主录入';
+        $logex->type = 'create';
+        $logex->datafrom = 'null';
+        $logex->datato = $buyer->toJson();
+        
         if ($buyer->save()) {
+            $logex->save();
             return Redirect::to('admin/buyers')->withErrors('添加成功！');
         } else {
             return Redirect::back()->withErrors('保存失败');
@@ -302,6 +311,8 @@ class BuyersController extends Controller {
             'name'  => 'required|min:2',
         ]);
         $buyer = Buyer::find($id);
+        $logex = new Logex;
+        $logex->datafrom = $buyer->toJson();
         $buyer->name = Input::get('name');
         $buyer->alpha = Input::get('alpha');
         $buyer->firstalpha = Input::get('firstalpha');
@@ -311,7 +322,14 @@ class BuyersController extends Controller {
         $buyer->telephone = Input::get('telephone');
         $buyer->phonenum = Input::get('phonenum');
 
+        $logex->userid = Auth::user()->id;
+        $logex->time = time();
+        $logex->what = '货主修改';
+        $logex->type = 'update';
+        $logex->datato = $buyer->toJson();
+
         if ($buyer->save()) {
+            $logex->save();
             return Redirect::to('admin/buyers')->withErrors('添加成功！');
         } else {
             return Redirect::back()->withErrors('保存失败');
@@ -327,6 +345,7 @@ class BuyersController extends Controller {
         $jiesuans = Input::get('jiesuan');
         $buyerid = Input::get('buyerid');
         $comments = Input::get('comments');
+        $logex = new Logex;
         if (empty($transids)) {
             return Redirect::back()->withErrors('没有选中任何记录');
         }
@@ -362,6 +381,13 @@ class BuyersController extends Controller {
                     }
                 }
             }
+            $logex->userid = Auth::user()->id;
+            $logex->time = time();
+            $logex->what = '货主分类账结算';
+            $logex->type = 'setstatus';
+            $logex->datafrom = 'null';
+            $logex->datato = $buyercheck->toJson();
+            $logex->save();
             $buyercheck->save();
         }
         return Redirect::to('admin/buyers/latest/'.$buyerid)->withErrors('添加成功！');
@@ -376,8 +402,17 @@ class BuyersController extends Controller {
 	public function destroy($id)
 	{
 		//
+        $logex = new Logex;
         $buyer = Buyer::find($id);
         $buyer->delete();
+        $logex = new Logex;
+        $logex->userid = Auth::user()->id;
+        $logex->time = time();
+        $logex->what = '货主删除';
+        $logex->type = 'delete';
+        $logex->datafrom= $buyer->toJson();
+        $logex->datato = 'null';
+        $logex->save();
         return Redirect::back()->withErrors('删除成功');
 	}
 

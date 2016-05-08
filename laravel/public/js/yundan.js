@@ -117,7 +117,7 @@ $(function(){
 
     $("#sub-btn").on("click",function(e){
                     //e.preventDefault();
-        var inp = $(".t-wrap").children("input"); 
+        var inp = $(".t-wrap").not(".no-wrap").children("input"); 
         var flag = false;
         inp.each(function(){
             var index = 0;
@@ -125,7 +125,7 @@ $(function(){
                 index = $(this).parent().index();    
                 var par = $(this).parents("ul").children();
                par.each(function(){
-                    var input = $(this).children().eq(index).children("input");
+                    var input = $(this).children().eq(index).not(".no-wrap").children("input");
                     input.each(function(){
                         if($.trim($(this).val()) == ""){
                             $(this).addClass("active");
@@ -233,6 +233,14 @@ $(function(){
             inp  : "jine",
             arr : ["otherName[]","otherMoney[]"]
         });
+
+/*
+        var self = $(this);
+        self.addClass("active").attr("disabled",true);
+        setTimeout(function(){
+            self.removeClass("active").attr("disabled",false);
+        },20000);
+ */       
     });
    
 
@@ -242,6 +250,7 @@ $(function(){
                 par : "content",
                 spe : "spend"
            });
+           kaizhi();
     
     });
 
