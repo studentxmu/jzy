@@ -965,13 +965,15 @@
 			</div>
             <script>
             $("input[type='text']").attr("disabled",true);
-            var results = JSON.parse('<?php echo json_encode($results) ?>');
-            //console.log(results);
-            if(results.chaiyou != "" && results != undefined){
+            var results = JSON.parse('<?php echo json_encode($results, true) ?>');
+            console.log( results instanceof Array);
+            console.log( results);
+            if("chaiyou" in results){
                 //柴油
                 var chaiyou = results['chaiyou'];
                 var oilList = $("#oil-wrap").find("ul").children();
-                if(chaiyou['1'] != "" && chaiyou['1'] != undefined){
+                //console.log(("2" in chaiyou));
+                if('1' in chaiyou){
                     $.each(chaiyou['1'],function(index,val){
                             var self = chaiyou['1'];
                             var chaiIndex = index;
@@ -982,7 +984,7 @@
                                 });
                             }) 
                 }
-                if(chaiyou['2'] != "" && chaiyou['2'] != undefined){
+                if('2' in chaiyou){
                     $.each(chaiyou['2'],function(index,val){
                             var self = chaiyou['2'];
                             var chaiIndex = index;
@@ -994,7 +996,7 @@
                     }) 
 
                 }
-                if(chaiyou['3'] != "" && chaiyou['3'] != undefined){
+                if('3' in chaiyou){
                     $.each(chaiyou['3'],function(index,val){
                             var self = chaiyou['3'];
                             var chaiIndex = index;
@@ -1008,27 +1010,26 @@
                 }
                 //收费站
                 var fine = results['guoqiao']; 
-                if(fine != "" && fine != undefined){
-                    if(fine['1'] != "" && fine['1'] != undefined){
-                        if(fine['1']['1'] != undefined && fine['1']['1'].length>0){
+                if("guoqiao" in results){
+                    if('1' in fine){
+                        if('1' in fine['1']){
                             addCon(fine['1']['1'],$("#cash-wrap").children('.totalList').eq(0).find('li'))
                         }
-                        if(fine['1']['2'] != undefined && fine['1']['2'].length>0){
+                        if('2' in fine['1']){
                             addCon(fine['1']['2'],$("#cash-wrap").children('.totalList').eq(1).find('li'))
                         }
                     }
-                    if(fine['2'] != "" && fine['2'] != undefined){
-                        if(fine['2']['1'] != undefined && fine['2']['1'].length>0){
+                    if('2' in fine){
+                        if('1' in fine['2']){
                             addCon(fine['2']['1'],$("#etc-wrap").children('.totalList').eq(0).find('li'))
                         }
-                        if(fine['2']['2'] != undefined && fine['2']['2'].length>0){
+                        if('2' in fine['2']){
                             addCon(fine['2']['2'],$("#etc-wrap").children('.totalList').eq(1).find('li'))
                         }
                     }
                 }
             }
-                $("#companyMoney").val(results['gongsi']['0'][3]);
-            if(results['gongsi'] != "" && results['gongsi'] != undefined){
+            if('gongsi' in results){
                 $("#companyMoney").val(results['gongsi']['0'][3]);
             }
             addCon(results['gongsi'],$("#company-wrap").find("ul").children())
@@ -1036,8 +1037,8 @@
             addCon(results['fakuan'],$("#fine-wrap").find("ul").children())
             addCon(results['qita'],$("#other-wrap").find("ul").children())
             function addCon(arr,obj){
-                if(results != "" && results != undefined){
-                    if(arr != "" && arr != undefined){
+                if(!jsonisEmpty(results)){
+                    if(arr instanceof Array && arr != "" && arr != undefined){
                         $.each(arr,function(index,val){
                                 var self = arr;
                                 var chaiIndex = index;
@@ -1083,6 +1084,17 @@
                 });
                 num = num == parseInt(num) ? num : num.toFixed(2);
                 total.val(num)
+            }
+
+            function jsonisEmpty(json){
+                if (typeof json === "object" && !(json instanceof Array)){  
+                    var hasProp = true;  
+                    for (var prop in json){  
+                        hasProp = false;  
+                        break;  
+                    }  
+                    return hasProp;
+                }  
             }
             </script>
     @endsection

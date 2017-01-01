@@ -305,7 +305,8 @@ function kaizhi(){
                         num += Number(val);
                     }
                 });
-                if(parseInt(num) != num)num=num.toFixed(2);
+                //if(parseInt(num) != num)num=num.toFixed(2);
+                num=num.toFixed(2)
                 total.val(num); 
                $("#payTotal").spend({
                     par : "content",

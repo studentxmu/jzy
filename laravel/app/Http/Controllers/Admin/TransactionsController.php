@@ -202,15 +202,19 @@ class TransactionsController extends Controller {
             //insert details
             if (!empty($oilMoney) && is_array($oilMoney)) {
                 foreach ($oilType as $oilkey => $oilvalue) {
-                    if (!empty($oilvalue) && !empty($oilMoney[$oilkey]) && !empty($oilDate[$oilkey])) {
+                    if (!empty($oilvalue) && !empty($oilMoney[$oilkey])) {
                         $detail = new Detail;
                         $detail->trans_id = $transaction->id;
                         $detail->type_id = 1;
                         $detail->cate_id = $oilvalue;
                         $detail->desc = $oilNum[$oilkey];
                         $detail->value = $oilMoney[$oilkey];
-                        $detail->address = $oilAddress[$oilkey];
-                        $detail->happendate = $oilDate[$oilkey];
+                        $detail->address = !empty($oilAddress[$oilkey]) ? $oilAddress[$oilkey] : '';
+                        if (empty($oilDate[$oilkey])) {
+                            $detail->happendate = $transaction->happendate;
+                        } else {
+                            $detail->happendate = $oilDate[$oilkey];
+                        }
                         $detail->save();
                         $logex->datato .= $detail->toJson();
                     }
@@ -442,11 +446,25 @@ class TransactionsController extends Controller {
 	public function update($id)
 	{
 		//
+        DB::beginTransaction();
         $transaction = Transaction::find($id);
         $logex = new Logex;
         $logex->datafrom = $transaction->toJson();
+
         $transaction->happendate = Input::get('happendate');
         $transaction->employee_id = Input::get('driver');
+        $driver2 = Input::get('driver2');
+        if (empty($driver2)) {
+            $transaction->employee2_id = 0;
+        } else {
+            $transaction->employee2_id = $driver2;
+        }
+        $baoxiao = Input::get('companyMoney');
+        if (empty($baoxiao)) {
+            $transaction->baoxiao = 0;
+        } else {
+            $transaction->baoxiao = $baoxiao;
+        }
         $transaction->car_id = Input::get('truckNum');
         $transaction->buyer_id = Input::get('owner');
         $transaction->goodsname = Input::get('goodsName');
@@ -456,8 +474,39 @@ class TransactionsController extends Controller {
         $transaction->beginweight = Input::get('beginweight');
         $transaction->endweight = Input::get('endweight');
         $transaction->perprice = Input::get('perprice');
-        $transaction->value = Input::get('freightTotal');
-        $transaction->cost = Input::get('payTotal');
+        $freightTotal = Input::get('freightTotal');
+        if (empty($freightTotal)) {
+            $transaction->value = 0;
+        } else {
+            $transaction->value = $freightTotal;
+        }
+        $payTotal = Input::get('payTotal');
+        if (empty($payTotal)) {
+            $transaction->cost = 0;
+        } else {
+            $transaction->cost = $payTotal;
+        }
+
+        $oilType = Input::get('oilType');
+        $oilNum = Input::get('oilNum');
+        $oilMoney = Input::get('oilMoney');
+        $oilPer = Input::get('oilPer');
+        $oilAddress = Input::get('oilAddress');
+        $oilDate = Input::get('oilDate');
+        $tollType = Input::get('tollType');
+        $tollGoCome = Input::get('tollGoCome');
+        $tollName = Input::get('tollName');
+        $tollMoney = Input::get('tollMoney');
+        $repairName = Input::get('repairName');
+        $repairMoney = Input::get('repairMoney');
+        $repairAddress = Input::get('repairAddress');
+        $fineAddress = Input::get('fineAddress');
+        $fineMoney = Input::get('fineMoney');
+        $otherName = Input::get('otherName');
+        $otherMoney = Input::get('otherMoney');
+        $licheng = Input::get('licheng');
+        $youhao = Input::get('youhao');
+        $danjia = Input::get('danjia');
 
         $logex->userid = Auth::user()->id;
         $logex->time = time();
@@ -466,8 +515,124 @@ class TransactionsController extends Controller {
         $logex->datato = $transaction->toJson();
 
         if ($transaction->save()) {
+            //insert finances
+            $details = $transaction->details;
+            foreach ($details as $detail) {
+                $detail->delete();
+            }
+            $finance = $transaction->finance;
+            $finance->type_id = 1;
+            $finance->status = 0;
+            $finance->happendate = $transaction->happendate;
+            $finance->car_id = $transaction->car_id;
+            $finance->employee_id = $transaction->employee_id;
+            $finance->employee2_id = $transaction->employee2_id;
+            $finance->desc = $transaction->fromplace . "-" . $transaction->endplace . "-" . $transaction->returnplace . "(" . $transaction->buyer->name . ")" . $transaction->perprice . ", " . $transaction->cost;
+            $finance->value = $transaction->value - $transaction->cost;
+            $finance->save();
+            $logex->datato .= $finance->toJson();
+
+            //insert details
+            if (!empty($oilMoney) && is_array($oilMoney)) {
+                foreach ($oilType as $oilkey => $oilvalue) {
+                    if (!empty($oilvalue) && !empty($oilMoney[$oilkey])) {
+                        $detail = new Detail;
+                        $detail->trans_id = $transaction->id;
+                        $detail->type_id = 1;
+                        $detail->cate_id = $oilvalue;
+                        $detail->desc = $oilNum[$oilkey];
+                        $detail->value = $oilMoney[$oilkey];
+                        $detail->address = !empty($oilAddress[$oilkey]) ? $oilAddress[$oilkey] : '';
+                        if (empty($oilDate[$oilkey])) {
+                            $detail->happendate = $transaction->happendate;
+                        } else {
+                            $detail->happendate = $oilDate[$oilkey];
+                        }
+                        $detail->save();
+                        $logex->datato .= $detail->toJson();
+                    }
+                }
+            }
+
+            if (!empty($tollMoney) && is_array($tollMoney)) {
+                foreach ($tollType as $tollkey => $tollvalue) {
+                    if (!empty($tollMoney[$tollkey])) {
+                        $detail = new Detail;
+                        $detail->trans_id = $transaction->id;
+                        $detail->type_id = 2;
+                        $detail->cate_id = $tollvalue;
+                        $detail->trip_id = $tollGoCome[$tollkey];
+                        $detail->value = $tollMoney[$tollkey];
+                        $detail->address = $tollName[$tollkey];
+                        $detail->happendate = $transaction->happendate;
+                        $detail->save();
+                        $logex->datato .= $detail->toJson();
+                    }
+                }
+            }
+
+            if (!empty($repairMoney) && is_array($repairMoney)) {
+                foreach ($repairMoney as $repairkey => $repairvalue) {
+                    if (!empty($repairMoney[$repairkey])) {
+                        $detail = new Detail;
+                        $detail->trans_id = $transaction->id;
+                        $detail->type_id = 3;
+                        $detail->value = $repairMoney[$repairkey];
+                        $detail->address = $repairAddress[$repairkey];
+                        $detail->happendate = $transaction->happendate;
+                        $detail->save();
+                        $logex->datato .= $detail->toJson();
+                    }
+                }
+            }
+
+            if (!empty($fineMoney) && is_array($fineMoney)) {
+                foreach ($fineMoney as $finekey => $finevalue) {
+                    if (!empty($fineMoney[$finekey])) {
+                        $detail = new Detail;
+                        $detail->trans_id = $transaction->id;
+                        $detail->type_id = 4;
+                        $detail->value = $fineMoney[$finekey];
+                        $detail->address = $fineAddress[$finekey];
+                        $detail->happendate = $transaction->happendate;
+                        $detail->save();
+                        $logex->datato .= $detail->toJson();
+                    }
+                }
+            }
+
+            if (!empty($otherMoney) && is_array($otherMoney)) {
+                foreach ($otherName as $otherkey => $othervalue) {
+                    if (!empty($otherName[$otherkey]) && !empty($otherMoney[$otherkey])) {
+                        $detail = new Detail;
+                        $detail->trans_id = $transaction->id;
+                        $detail->type_id = 5;
+                        $detail->address = $othervalue;
+                        $detail->value = $otherMoney[$otherkey];
+                        $detail->happendate = $transaction->happendate;
+                        $detail->save();
+                        $logex->datato .= $detail->toJson();
+                    }
+                }
+            }
+
+            if (!empty($danjia) && is_array($danjia)) {
+                foreach ($danjia as $comkey => $comvalue) {
+                    if (!empty($licheng[$comkey]) && !empty($youhao[$comkey]) && !empty($danjia[$comkey])) {
+                        $detail = new Detail;
+                        $detail->trans_id = $transaction->id;
+                        $detail->type_id = 6;
+                        $detail->address = $licheng[$comkey];
+                        $detail->desc = $youhao[$comkey];
+                        $detail->value = $danjia[$comkey];
+                        $detail->happendate = $transaction->happendate;
+                        $detail->save();
+                        $logex->datato .= $detail->toJson();
+                    }
+                }
+            }
             $logex->save();
-            $transaction->refreshMoney();
+            DB::commit();
             return Redirect::to('admin/transactions')->withErrors('编辑成功！');
         } else {
             return Redirect::back()->withErrors('保存失败');

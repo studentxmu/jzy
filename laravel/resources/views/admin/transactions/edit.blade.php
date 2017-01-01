@@ -36,7 +36,7 @@
 								</div>
 								<div class="fr" id="truckpar">
 									<span>车号：</span>
-                                    <input type="hidden" name="truckNum" id="truckhid"/>
+                                    <input type="hidden" name="truckNum" id="truckhid" value="{{$transaction->car->id}}"/>
                                     <input type="text" value="{{$transaction->car->code}}" id="truckNum"/>
                                     <ul id="trucklist"></ul> 
                                     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
@@ -47,19 +47,19 @@
 							<ul>
 								<li id="driverpar">
 									<span>司机1：</span>
-                                    <input type="hidden" name="driver" id="driverhid"/>
+                                    <input type="hidden" name="driver" id="driverhid" value="{{$transaction->employee->id}}"/>
                                     <input type="text" value="{{$transaction->employee->name}}" id="driver"/>
                                     <ul id="driverlist"></ul> 
 								</li>
 								<li id="driver2par">
 									<span>司机2：</span>
-                                    <input type="hidden" name="driver2" id="driver2hid"/>
+                                    <input type="hidden" name="driver2" id="driver2hid" value="{{!empty($transaction->employee2->id) ? $transaction->employee2->id: ''}}"/>
                                     <input type="text" value="{{!empty($transaction->employee2->name) ? $transaction->employee2->name : ''}}" id="driver2"/>
                                     <ul id="driver2list"></ul> 
 								</li>
 								<li id="goodspar">
 									<span>货主：</span>
-                                    <input type="hidden" name="owner" id="goodshid"/>
+                                    <input type="hidden" name="owner" id="goodshid" value="{{$transaction->buyer->id}}"/>
                                     <input type="text" value="{{$transaction->buyer->name}}" id="owner"/>
                                     <ul id="goodslist"></ul> 
 								</li>
@@ -960,19 +960,66 @@
 							<input type="text" id="sumTotal" name="sumTotal" value="{{$transaction->value - $transaction->cost}}" class="validate[required,custom[number]]" readOnly/>
 							<span>元</span>
 						</li>
+                        <li class="button">
+                            <span>&nbsp;</span>
+                             <!--<button id="sub-btn" class="btn btn-lg btn-info">确认提交</button>-->
+                             <input type="submit" id="sub-btn" class="btn btn-lg btn-info" value="确认提交">
+                        </li>
 					</ul>
 				</div>
 				<!--总结结束-->
                 </form>
 			</div>
             <script>
+            $("#driver").on("keyup focus",function(){
+                    $(this).search({
+                        user : <?php echo $peoples ?>,// 数组
+                        par  : "driverpar",// 父级id
+                        list : "driverlist",// 列表ul的id
+                        hide : "driverhid"//hidden域id
+                    });
+                });
+            $("#driver2").on("keyup focus",function(){
+                    $(this).search({
+                        user : <?php echo $peoples ?>,// 数组
+                        par  : "driver2par",// 父级id
+                        list : "driver2list",// 列表ul的id
+                        hide : "driver2hid"//hidden域id
+                    });
+                });
+            $("#owner").on("keyup focus",function(){
+                    $(this).search({
+                        user : <?php echo $customers ?>,// 数组
+                        par  : "goodspar",// 父级id
+                        list : "goodslist",// 列表ul的id
+                        hide : "goodshid"//hidden域id
+                    });
+                });
+            $("#truckNum").on("keyup focus",function(){
+                    $(this).search({
+                        user : <?php echo $trucks ?>,// 数组
+                        par  : "truckpar",// 父级id
+                        list : "trucklist",// 列表ul的id
+                        hide : "truckhid"//hidden域id
+                    });
+                });
+            $("#sub-btn").click(function(e){
+                  //  e.preventDefault();
+                if($("#driverhid").val() == "" || $("#truckhid").val() == "" || $("#goodshid").val() == ""){
+                    e.preventDefault();
+                }
+            
+            });
             //$("input[type='text']").attr("disabled",true);
-            var results = JSON.parse('<?php echo json_encode($results) ?>');
-            if(results.chaiyou != "" && results != undefined){
+            var results = JSON.parse('<?php echo json_encode($results, true) ?>');
+            console.log( results instanceof Array);
+            console.log( results);
+            if("chaiyou" in results){
                 //柴油
                 var chaiyou = results['chaiyou'];
                 var oilList = $("#oil-wrap").find("ul").children();
-                if(chaiyou['1'] != "" && chaiyou['1'] != undefined){
+                //console.log(("2" in chaiyou));
+                if('1' in chaiyou){
                     $.each(chaiyou['1'],function(index,val){
                             var self = chaiyou['1'];
                             var chaiIndex = index;
@@ -983,7 +1030,7 @@
                                 });
                             }) 
                 }
-                if(chaiyou['2'] != "" && chaiyou['2'] != undefined){
+                if('2' in chaiyou){
                     $.each(chaiyou['2'],function(index,val){
                             var self = chaiyou['2'];
                             var chaiIndex = index;
@@ -995,7 +1042,7 @@
                     }) 
 
                 }
-                if(chaiyou['3'] != "" && chaiyou['3'] != undefined){
+                if('3' in chaiyou){
                     $.each(chaiyou['3'],function(index,val){
                             var self = chaiyou['3'];
                             var chaiIndex = index;
@@ -1009,26 +1056,26 @@
                 }
                 //收费站
                 var fine = results['guoqiao']; 
-                if(fine != "" && fine != undefined){
-                    if(fine['1'] != "" && fine['1'] != undefined){
-                        if(fine['1']['1'].length>0){
+                if("guoqiao" in results){
+                    if('1' in fine){
+                        if('1' in fine['1']){
                             addCon(fine['1']['1'],$("#cash-wrap").children('.totalList').eq(0).find('li'))
                         }
-                        if(fine['1']['2'].length>0){
+                        if('2' in fine['1']){
                             addCon(fine['1']['2'],$("#cash-wrap").children('.totalList').eq(1).find('li'))
                         }
                     }
-                    if(fine['2'] != "" && fine['2'] != undefined){
-                        if(fine['2']['1'].length>0){
+                    if('2' in fine){
+                        if('1' in fine['2']){
                             addCon(fine['2']['1'],$("#etc-wrap").children('.totalList').eq(0).find('li'))
                         }
-                        if(fine['2']['2'].length>0){
+                        if('2' in fine['2']){
                             addCon(fine['2']['2'],$("#etc-wrap").children('.totalList').eq(1).find('li'))
                         }
                     }
                 }
             }
-            if(results['gongsi'] != "" && results['gongsi'] != undefined){
+            if('gongsi' in results){
                 $("#companyMoney").val(results['gongsi']['0'][3]);
             }
             addCon(results['gongsi'],$("#company-wrap").find("ul").children())
@@ -1036,8 +1083,8 @@
             addCon(results['fakuan'],$("#fine-wrap").find("ul").children())
             addCon(results['qita'],$("#other-wrap").find("ul").children())
             function addCon(arr,obj){
-                if(results != "" && results != undefined){
-                    if(arr != "" && arr != undefined){
+                if(!jsonisEmpty(results)){
+                    if(arr instanceof Array && arr != "" && arr != undefined){
                         $.each(arr,function(index,val){
                                 var self = arr;
                                 var chaiIndex = index;
@@ -1084,6 +1131,16 @@
                 num = num == parseInt(num) ? num : num.toFixed(2);
                 total.val(num)
             }
-            
+
+            function jsonisEmpty(json){
+                if (typeof json === "object" && !(json instanceof Array)){  
+                    var hasProp = true;  
+                    for (var prop in json){  
+                        hasProp = false;  
+                        break;  
+                    }  
+                    return hasProp;
+                }  
+            }
             </script>
     @endsection
